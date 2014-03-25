@@ -10,4 +10,4 @@
 	% include invalidquery.tpl searchterm=searchterm
 % end
 
-% include BOTTOM.tpl
+% include BOTTOM.tpl version_string=version_string
