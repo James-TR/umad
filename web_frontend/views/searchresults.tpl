@@ -1,22 +1,24 @@
 		<div id="output">
-		% if searchterm:
-			% if hits:
-				% # XXX: Push sanity futher up the stack
-				% for i,hit in enumerate(hits):
-					% hit['result_number'] = i+1
-					% hit['other_metadata'] = dict(hit['other_metadata'])
-				% end
+		<%
+		if searchterm:
+			if hits:
+				# XXX: Push sanity futher up the stack
+				for i,hit in enumerate(hits):
+					hit['result_number'] = i+1
+					hit['other_metadata'] = dict(hit['other_metadata'])
+				end
 
-				% # See if we might have been truncated anywhere, hit_limit applies on a per doc_type basis.
-				% # XXX: This is a hack, we should be checking other_metadata->doc_type (where present) instead of highlight.
-				% truncated = False
-				% for doc_type in doc_types_present:
-					% num_hits_of_this_type = len([ x for x in hits if x['highlight_class']==doc_type[1] ])
-					% if num_hits_of_this_type >= hit_limit:
-						% truncated = True
-						% break
-					% end
-				% end
+				# See if we might have been truncated anywhere, hit_limit applies on a per doc_type basis.
+				# XXX: This is a hack, we should be checking other_metadata->doc_type (where present) instead of highlight.
+				truncated = False
+				for doc_type in doc_types_present:
+					num_hits_of_this_type = len([ x for x in hits if x['highlight_class']==doc_type[1] ])
+					if num_hits_of_this_type >= hit_limit:
+						truncated = True
+						break
+					end
+				end
+				%>
 
 				<div id="hitstats">
 					% if not truncated:
