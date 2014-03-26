@@ -6,7 +6,7 @@ from provsysresource import debug
 from provisioningclient import *
 
 
-def blobify(UNUSED):
+def blobify(UNUSED_distiller):
 	server.requester    = 'umad_tma'
 	server.uri          = 'https://resources.engineroom.anchor.net.au/'
 	server.user         = "script"

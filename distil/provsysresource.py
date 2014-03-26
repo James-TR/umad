@@ -232,8 +232,11 @@ def os_to_document(os_resource):
 
 
 
-def blobify(url):
+def blobify(distiller):
 	'''Example URL: https://resources.engineroom.anchor.net.au/resources/10150 '''
+
+	url         = distiller.url
+	indexer_url = distiller.indexer_url
 
 	server.requester    = 'umad_distiller'
 	server.uri          = 'https://resources.engineroom.anchor.net.au/'

@@ -17,6 +17,8 @@ def debug(msg):
 		sys.stderr.write('\n')
 		sys.stderr.flush()
 
+UMAD_INDEXER_URL = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
+
 def red(msg):
 	return colored(msg, 'red')
 def green(msg):
@@ -53,7 +55,7 @@ def main(argv=None):
 		debug(red("-" * len("URL: %s"%url)))
 
 		try:
-			d = distil.Distiller(url)
+			d = distil.Distiller(url, indexer_url=UMAD_INDEXER_URL)
 		except distil.NoUrlHandler:
 			print "Don't know how to handle URL: %s" % url
 			continue
