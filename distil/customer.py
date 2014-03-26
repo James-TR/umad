@@ -143,9 +143,6 @@ def blobify(url):
 	blob = " ".join([
 		str(customer_id),
 		customer_name.encode('utf8'),
-		u' '.join([ blobify_contact(x) for x in primary_contacts ]).encode('utf8'),
-		u' '.join([ blobify_contact(x) for x in billing_contacts ]).encode('utf8'),
-		u' '.join([ blobify_contact(x) for x in alternative_contacts ]).encode('utf8'),
 		])
 
 	realnames     = [ x['contact_name'] for x in primary_contacts+billing_contacts+alternative_contacts ]
@@ -165,6 +162,8 @@ def blobify(url):
 		'realname':         realnames,
 		'email':            emails,
 		'phone_number':     phone_numbers,
+		'customer_id':      customer_id,
+		'customer_name':    customer_name,
 		#'last_updated':     customer_lastupdated,
 		}
 
