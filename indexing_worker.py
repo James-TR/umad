@@ -3,7 +3,7 @@ import os
 
 import redis
 
-import distil
+from distil import get_distiller
 from elasticsearch_backend import *
 
 
@@ -23,18 +23,16 @@ DEBUG = True
 PID_PREFIX = '[pid {0}] '.format(os.getpid())
 debug("Debug logging is enabled")
 
-UMAD_INDEXER_URL = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
-debug("UMAD indexer is located at: {0}".format(UMAD_INDEXER_URL))
-
 
 
 def index(url):
 	debug("URL to index: {0}".format(url))
 
-	d = distil.Distiller(url, indexer_url=UMAD_INDEXER_URL)
+	d = get_distiller(url)
 
 	for doc in d.docs:
 		if doc is None:
+			# XXX: should this be `continue` instead? For distillers+urls that can return multiple documents, some of which might fail.
 			return
 		debug("Adding to index: {0} (type of the blob is {1})".format(doc['url'], type(doc['blob'])))
 

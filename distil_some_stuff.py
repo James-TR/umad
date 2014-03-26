@@ -3,7 +3,7 @@ from optparse import OptionParser
 from colorama import init as init_colorama
 from termcolor import colored
 
-import distil
+from distil import get_distiller
 from elasticsearch_backend import *
 
 
@@ -50,8 +50,8 @@ def main(argv=None):
 		debug(red("-" * len("URL: %s"%url)))
 
 		try:
-			d = distil.Distiller(url, indexer_url=UMAD_INDEXER_URL)
-		except distil.NoUrlHandler:
+			d = get_distiller(url)
+		except:
 			print "Don't know how to handle URL: %s" % url
 			continue
 
