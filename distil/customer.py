@@ -60,7 +60,7 @@ def clean_contact(contact_dict):
 
 	# Phone numbers seem to be retarded, it's a dict of unicode=>{unicode|dict}
 	# Populated values have a unicode value, while empty entries have an (empty) dict
-	contact['contact_phone_numbers'] = dict((k,v) for k,v in contact_dict['phone_numbers'].iteritems() if type(v) is not dict)
+	contact['contact_phone_numbers'] = dict((k,v.replace(' ', '')) for k,v in contact_dict['phone_numbers'].iteritems() if type(v) is not dict)
 
 	# - contact_id <type 'int'>
 	# - contact_name <type 'unicode'>
