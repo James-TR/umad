@@ -14,7 +14,7 @@ from dateutil.tz import *
 import requests
 
 class MissingAuth(Exception): pass
-
+class FailedToRetrieveCustomer(Exception): pass
 
 def blobify_contact(c):
 	# A contact-dict is:
