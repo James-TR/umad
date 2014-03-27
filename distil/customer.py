@@ -133,7 +133,7 @@ def blobify(distiller):
 	customer_id          = customer['_id']
 	customer_name        = customer['description']
 	customer_url         = customer['_url'] # probably not necessary, can the URL ever change?
-	functional_url          = 'https://system.netsuite.com/app/common/search/ubersearchresults.nl?quicksearch=T&searchtype=Uber&frame=be&Uber_NAMEtype=KEYWORDSTARTSWITH&Uber_NAME=cust:{0}'.format(customer_id)
+	functional_url       = 'https://system.netsuite.com/app/common/search/ubersearchresults.nl?quicksearch=T&searchtype=Uber&frame=be&Uber_NAMEtype=KEYWORDSTARTSWITH&Uber_NAME=cust:{0}'.format(customer_id)
 	primary_contacts     = get_contacts(customer['primary_contact_url_list'])
 	billing_contacts     = get_contacts(customer['billing_contact_url_list'])
 	alternative_contacts = get_contacts(customer['alternative_contact_url_list'])

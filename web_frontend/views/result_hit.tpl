@@ -40,6 +40,7 @@
 				% end
 
 				% if doc_type == 'customer':
+				<!-- XXX: This fails when there's no customer_id.  Why is there no customer ID? -->
 				<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
 					<% output = ''
 					if other_metadata.has_key('primary_contacts'):
