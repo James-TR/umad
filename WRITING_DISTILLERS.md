@@ -24,7 +24,9 @@ indexing, in a field named `local_id`.
 Determining doc_type
 --------------------
 
-Your localconfig.py must provide XXX: continue here
+Your localconfig.py must provide...
+
+TBC
 
 
 Interface
@@ -32,10 +34,11 @@ Interface
 
 The interface is super simple:
 
-* You provide a callable named `blobify`
-* It's called with a single argument, a URL to the thing/s to be indexed. This
-  is opaque and may have a bogus schema and everything. This is your problem
-  for now.
+* You subclass the Distiller class
+* Your class implements a method named `blobify`
+* When called, `blobify` (usually) inspects `self.url` then gets to work
+    * The URL is opaque and may have a bogus schema and everything, what you do with it is up to you
+and is expected to return an iterator or list of documents.
 * Your callable returns an iterable of blobs to be indexed.
     * `yield`ing is particularly elegant.
 * Blobs are a dictionary with two keys, a `url` and a `blob`. Because the
