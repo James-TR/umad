@@ -136,10 +136,6 @@ def blobify(distiller):
 	# - primary_contacts      <list> of <contact-dict>
 	# - billing_contacts      <list> of <contact-dict>
 	# - alternative_contacts  <list> of <contact-dict>
-	# XXX: There could be used later to perform uniq'ing of contacts
-	#primary_ids = [ x['contact_id'] for x in primary_contacts ]
-	#billing_ids = [ x['contact_id'] for x in billing_contacts ]
-	#alternative_ids = [ x['contact_id'] for x in alternative_contacts ]
 
 	blob = " ".join([
 		str(customer_id),
