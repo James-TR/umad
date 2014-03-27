@@ -23,7 +23,15 @@ def blobify_contact(c):
 	# - contact_email <type 'unicode'>
 	# - contact_phone_numbers <type 'dict'>
 	#     - <type 'unicode'>  -->  <type 'unicode'>
-	return u"{contact_name} {contact_email} {numbers_only}".format(numbers_only=' '.join(c['contact_phone_numbers'].values()), **c)
+	contact_details = []
+	if c['contact_email']:
+		contact_details.append(c['contact_email'])
+	contact_details += [ x for x in c['contact_phone_numbers'].values()]
+
+	if contact_details:
+		return u"{1} ({0})".format(', '.join(contact_details), c['contact_name'])
+	
+	return c['contact_name']
 
 def clean_contact(contact_dict):
 	# - city <type 'unicode'>
@@ -142,12 +150,6 @@ def blobify(distiller):
 		customer_name.encode('utf8'),
 		])
 
-	realnames     = [ x['contact_name'] for x in primary_contacts+billing_contacts+alternative_contacts ]
-	emails        = [ x['contact_email'] for x in primary_contacts+billing_contacts+alternative_contacts ]
-	phone_numbers = [ x['contact_phone_numbers'] for x in primary_contacts+billing_contacts+alternative_contacts ]
-	# phone_numbers is now a list of mini-dicts
-	phone_numbers = list( chain.from_iterable( [ x.values() for x in phone_numbers ] ) )
-
 	# XXX: This should possibly be improved by collapsing all contacts into a
 	# single list, with roles tagged on.
 	customerblob = {
@@ -155,14 +157,23 @@ def blobify(distiller):
 		'blob':             blob,
 		'local_id':         customer_id,
 		'title':            customer_name,
-		'excerpt':          "Here's what we know about the customer: {0}".format(blob),
-		'realname':         realnames,
-		'email':            emails,
-		'phone_number':     phone_numbers,
 		'customer_id':      customer_id,
 		'customer_name':    customer_name,
+		'functional_url':   functional_url,
 		#'last_updated':     customer_lastupdated,
 		}
 
+	if primary_contacts:
+		primary_contacts_blob = u"Primary contacts: {0}".format(', '.join([ blobify_contact(x) for x in primary_contacts ])).encode('utf8')
+		customerblob['primary_contacts'] = primary_contacts_blob
+		customerblob['blob'] += '\n' + primary_contacts_blob
+	if billing_contacts:
+		billing_contacts_blob = u"Billing contacts: {0}".format(', '.join([ blobify_contact(x) for x in billing_contacts ])).encode('utf8')
+		customerblob['billing_contacts'] = billing_contacts_blob
+		customerblob['blob'] += '\n' + billing_contacts_blob
+	if alternative_contacts:
+		technical_contacts_blob = u"Technical contacts: {0}".format(', '.join([ blobify_contact(x) for x in alternative_contacts ])).encode('utf8')
+		customerblob['technical_contacts'] = technical_contacts_blob
+		customerblob['blob'] += '\n' + technical_contacts_blob
 
 	yield customerblob
