@@ -98,9 +98,11 @@ def tidy_url(url):
 	return (ticket_url, ticket_messages_url)
 
 
-def blobify(url):
+def blobify(distiller):
 	# Note to self: yield'ing is cool. Either yield, return None, or raise
 	# an exception. The latter is some other poor schmuck's problem.
+
+	indexer_url = distiller.indexer_url
 
 	# Customer Name cache
 	cn_cache = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -115,7 +117,7 @@ def blobify(url):
 		raise MissingAuth("You must provide Anchor API credentials, please set API_AUTH_USER and API_AUTH_PASS")
 
 	# Prep URL and headers for requests
-	ticket_url, messages_url = tidy_url(url)
+	ticket_url, messages_url = tidy_url(distiller.url)
 	headers = {}
 	headers['Accept'] = 'application/json'
 
@@ -144,9 +146,17 @@ def blobify(url):
 
 	# Don't index deleted tickets
 	if ticket_status == 'deleted':
-		# Actually, do index them for now, we'll hide them in results later
+		# Actually, do index them for now, we'll hide them in results later.
+		#print "I would contact the indexer ({0}) and delete {1}".format(indexer_url, ticket_url)
 		pass
-		#return
+
+	# XXX: Handle deleted and merged tickets now. Use indexer_url here and
+	# call for the ticket's deletion.
+	#  - Deleted tickets: Delete the URL
+	#  - Merged tickets: When deleting we MUST act on distiller.url, not
+	#    ticket_url that we got from the API (that's the ticket it was merged into)
+	#  - What about tickets that have been merged and then deleted? We want to
+	#    delete both distiller.url and ticket_url
 
 	# This may be None if there's no Related Customer set
 	customer_url = ticket['customer_url']

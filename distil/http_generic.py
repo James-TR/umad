@@ -17,7 +17,10 @@ def fetch(url):
 	url = tidy_url(url)
 	return requests.get(url, verify=True)
 
-def blobify(url):
+def blobify(distiller):
+	url         = distiller.url
+	indexer_url = distiller.indexer_url
+
 	response = fetch(url)
 
 	content = html2text.html2text(response.text)
@@ -29,4 +32,4 @@ def blobify(url):
 	else:
 		title = url
 
-	return [{ 'url':url, 'blob':content, 'title':title }]
+	yield { 'url':url, 'blob':content, 'title':title }

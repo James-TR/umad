@@ -1,22 +1,24 @@
 		<div id="output">
-		% if searchterm:
-			% if hits:
-				% # XXX: Push sanity futher up the stack
-				% for i,hit in enumerate(hits):
-					% hit['result_number'] = i+1
-					% hit['other_metadata'] = dict(hit['other_metadata'])
-				% end
+		<%
+		if searchterm:
+			if hits:
+				# XXX: Push sanity futher up the stack
+				for i,hit in enumerate(hits):
+					hit['result_number'] = i+1
+					hit['other_metadata'] = dict(hit['other_metadata'])
+				end
 
-				% # See if we might have been truncated anywhere, hit_limit applies on a per doc_type basis.
-				% # XXX: This is a hack, we should be checking other_metadata->doc_type (where present) instead of highlight.
-				% truncated = False
-				% for doc_type in doc_types_present:
-					% num_hits_of_this_type = len([ x for x in hits if x['highlight_class']==doc_type[1] ])
-					% if num_hits_of_this_type >= hit_limit:
-						% truncated = True
-						% break
-					% end
-				% end
+				# See if we might have been truncated anywhere, hit_limit applies on a per doc_type basis.
+				# XXX: This is a hack, we should be checking other_metadata->doc_type (where present) instead of highlight.
+				truncated = False
+				for doc_type in doc_types_present:
+					num_hits_of_this_type = len([ x for x in hits if x['highlight_class']==doc_type[1] ])
+					if num_hits_of_this_type >= hit_limit:
+						truncated = True
+						break
+					end
+				end
+				%>
 
 				<div id="hitstats">
 					% if not truncated:
@@ -30,8 +32,7 @@
 				</div>
 				<ul id="hits">
 				% for hit in hits:
-					% # This syntax is good for Bottle < 0.12, after that I think it should be:  include('result_hit.tpl', hit=hit)
-					% include result_hit.tpl highlight_class=hit['highlight_class'], id=hit['id'], extract=hit['extract'], other_metadata=hit['other_metadata'], score=hit['score']
+					% include('result_hit.tpl', highlight_class=hit['highlight_class'], id=hit['id'], extract=hit['extract'], other_metadata=hit['other_metadata'], score=hit['score'])
 				% end
 				</ul>
 			% else:

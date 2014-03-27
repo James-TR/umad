@@ -15,7 +15,10 @@ JUNK_CONTENT.append('  * Search\n\n  * Home\n  * All\n  * New\n  * Upload\n  * R
 
 class FailedToRetrievePage(Exception): pass
 
-def blobify(url):
+def blobify(distiller):
+	url         = distiller.url
+	indexer_url = distiller.indexer_url
+
 	MAPWIKI_USER = os.environ.get('MAPWIKI_USER', '')
 	MAPWIKI_PASS = os.environ.get('MAPWIKI_PASS', '')
 
@@ -23,6 +26,7 @@ def blobify(url):
 	try:
 		response.raise_for_status()
 	except:
+		# XXX: If we got a 404, we should probably delete the page from the index
 		raise FailedToRetrievePage("Error getting page from map wiki, got HTTP response {0} with error: {1}".format(response.status_code, response.reason) )
 
 

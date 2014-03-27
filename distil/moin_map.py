@@ -22,11 +22,12 @@ def tidy_url(url):
 	url = url.partition('#')[0] # Question marks aren't disallowed in the fragment identifier (I seem to recall)
 	return url.partition('?')[0]
 
-def blobify(url):
+def blobify(distiller):
 	MAPWIKI_USER = os.environ.get('MAPWIKI_USER', '')
 	MAPWIKI_PASS = os.environ.get('MAPWIKI_PASS', '')
 
-	url = tidy_url(url)
+	url = tidy_url(distiller.url)
+	indexer_url = distiller.indexer_url
 
 	response = requests.get(url, auth=(MAPWIKI_USER, MAPWIKI_PASS), params={'action':'raw'}, verify='AnchorCA.pem')
 	try:

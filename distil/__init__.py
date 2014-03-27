@@ -1,13 +1,10 @@
 import moin_map
 import gollum_docs
-import local_file
 import http_generic
 import rt_ticket
-import rt_ticket_query
 import provsysservers
 import provsysvlans
 import provsysresource
-import provsys
 import customer
 
 
@@ -46,24 +43,18 @@ class Distiller(object):
 			elif url.startswith('https://docs.anchor.net.au/'):
 				self.fetcher = gollum_docs
 
-			elif url.startswith('https://ticket.api.anchor.com.au/ticket?'):
-				self.fetcher = rt_ticket_query
 			elif url.startswith('provsysservers://'):
 				self.fetcher = provsysservers
 			elif url.startswith('provsysvlans://'):
 				self.fetcher = provsysvlans
 			elif url.startswith('https://resources.engineroom.anchor.net.au/resources/'):
 				self.fetcher = provsysresource
-			elif url.startswith('provsys://'):
-				self.fetcher = provsys
-			
+		
 			elif url.startswith('https://customer.api.anchor.com.au/customers/'):
 				self.fetcher = customer
 
 			elif url.startswith( ('http://', 'https://') ):
 				self.fetcher = http_generic
-			elif url.startswith('file:///'):
-				self.fetcher = local_file
 			elif url.startswith('example://your.url.here/'):
 				self.fetcher = None
 		except:
@@ -76,4 +67,4 @@ class Distiller(object):
 	def blobify(self):
 		# XXX: Pass self.indexer_url through to each blobify function.
 		# XXX: Should probably be properly-OO and have each distiller subclass this basic distiller.
-		self.docs = self.fetcher.blobify(self.url)
+		self.docs = self.fetcher.blobify(self)

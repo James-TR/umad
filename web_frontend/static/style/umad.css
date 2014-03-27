@@ -247,6 +247,29 @@ li {
 .result-card .reindex-button:hover span.lsf {
   color: #39e639;
 }
+.version-marker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: smaller;
+  font-style: monospace;
+  font-weight: bold;
+  color: #aaaaaa;
+  opacity: 0.35;
+}
+.version-marker:hover {
+  opacity: 1;
+}
+.version-marker .version-string {
+  position: fixed;
+  bottom: 1em;
+  left: 0;
+  z-index: 1;
+  visibility: hidden;
+}
+.version-marker:hover .version-string {
+  visibility: visible;
+}
 @font-face {
   font-family: 'LigatureSymbols';
   src: url('/static/font/LigatureSymbols-2.11.eot');

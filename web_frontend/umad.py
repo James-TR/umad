@@ -14,6 +14,7 @@ from dateutil.tz import *
 from elasticsearch_backend import *
 
 
+VERSION_STRING = 'no version string found'
 DEBUG = False
 def debug(msg, force_debug=False):
 	if DEBUG or force_debug:
@@ -101,6 +102,10 @@ def search():
 	template_dict['hit_limit'] = 0
 	template_dict['valid_search_query'] = True
 	template_dict['doc_types_present'] = set()
+
+	# Determined at startup and filled in
+	global VERSION_STRING
+	template_dict['version_string'] = VERSION_STRING
 
 
 	if q:
@@ -204,6 +209,12 @@ def main(argv=None):
 
 	global DEBUG
 	DEBUG = options.debug
+
+	global VERSION_STRING
+	if os.path.exists('RUNNING_VERSION'):
+		with open('RUNNING_VERSION', 'r') as f:
+			VERSION_STRING = f.readline().strip()
+	debug("Using version string {0}".format(VERSION_STRING))
 
 	run(host=options.bind_host, port=options.bind_port, debug=True)
 
