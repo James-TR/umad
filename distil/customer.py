@@ -90,7 +90,8 @@ def get_contacts(contact_list):
 
 
 
-def blobify(url):
+def blobify(distiller):
+	url = distiller.url
 	# Note to self: yield'ing is cool. Either yield, return None, or raise
 	# an exception. The latter is some other poor schmuck's problem.
 
