@@ -20,14 +20,11 @@
 				end
 				%>
 
-				<div id="hitstats">
+				<div class="alert alert-info">
 					% if not truncated:
-						<span style="font-size: larger;">Showing {{ "all " if len(hits) > 1 else "" }}<strong><span id="hitcount">{{ len(hits) }}</span> {{ "result" if len(hits) == 1 else "results" }}</strong></span>
+						Showing {{ "all " if len(hits) > 1 else "" }}<strong>{{ len(hits) }} {{ "result" if len(hits) == 1 else "results" }}</strong>
 					% else:
-						<span style="font-size: larger;">Display limited to <strong><span id="hitcount">{{ len(hits) }}</span> {{ "result" if len(hits) == 1 else "results" }} </strong></span> <span title="Explain why">(❔)</span>
-						<div class="hitstats-explanation">
-							<em>Results may be truncated, no more than {{ hit_limit }} of each document type are displayed</em>
-						</div>
+						Display limited to <strong>{{ len(hits) }} {{ "result" if len(hits) == 1 else "results" }}. </strong>Results may be truncated, no more than {{ hit_limit }} of each document type are displayed
 					% end
 				</div>
 				<ul id="hits">

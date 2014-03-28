@@ -2,6 +2,9 @@
 <html>
 <head>
 	<title>UMAD?</title>
+	<link rel="stylesheet" href="/static/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="/static/css/bootstrap-theme.css">
 	<link rel="stylesheet" href="/static/style/umad-responsive.css">
 	<link rel="search" type="application/opensearchdescription+xml" title="UMAD?" href="/umad-opensearch.xml">
 
@@ -71,7 +74,7 @@
 				evilAnalyticsSocket = null;
 			}
 		}
-        	function umadEvilAnalytics(stuff) {
+			function umadEvilAnalytics(stuff) {
 			// Send analytics log entry to the websocket server.
 			//
 			// Again, we really don't care if this fails as long as
@@ -164,4 +167,4 @@
 </head>
 
 <body>
-	<div id="container">
+	<div id="container-fluid">

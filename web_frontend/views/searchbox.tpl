@@ -1,14 +1,16 @@
-		<div id="searchbox">
+		<div class="jumbotron">
 
 			<form name="q" method="get" action="/" 
 % if searchterm:
 				onSubmit="evilSearchedAgain()"
 % end
 			>
-				<table id="searchform"><tr>
-					<td class="umadlogo-td"><a href="/?q=mad"><img src="/static/img/umad.png" class="umadlogo" style="border:0;" alt="UMAD logo"></a></td><td><input type="search" id="searchinput" name="q" placeholder="UMAD?" value="{{ searchterm }}" autofocus="autofocus"></td><td><input type="submit" id="searchbutton" class="lsf" value="search"></td>
-				</tr></table>
-			</form>
+
+			<div class="input-group input-group">
+				<span class="input-group-addon" id="umadbox">
+					<a href="/?q=mad"><img src="/static/img/umad.png" class="umadlogo" style="border:0;" alt="UMAD logo"></a></span>
+			 	<input type="search" class="form-control" id="searchinput" name="q" placeholder="UMAD?" value="{{ searchterm }}" autofocus="autofocus">
+			</div>
 
 			<div id="search-toggles">
 				% for doc_type in doc_types_present:
