@@ -13,6 +13,12 @@ class MoinMapDistiller(Distiller):
 	         let the HTML-to-Markdown processor have at it.
 	"""
 
+	doc_type = 'map'
+
+	@classmethod
+	def will_handle(url):
+		return url.startswith('https://map.engineroom.anchor.net.au/')
+
 	def tidy_url(self):
 		"This is a hack that destroys query parameters"
 		# Question marks aren't disallowed in the fragment identifier (I seem to recall)

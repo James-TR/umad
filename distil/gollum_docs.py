@@ -12,6 +12,11 @@ JUNK_CONTENT.append('  * Search\n\n  * Home\n  * All\n  * New\n  * Upload\n  * R
 from distiller import Distiller
 
 class GollumDistiller(Distiller):
+	doc_type = 'docs'
+
+	@classmethod
+	def will_handle(url):
+		return url.startswith('https://docs.anchor.net.au/')
 
 	def tidy_url(self):
 		"This is a hack that destroys query parameters"

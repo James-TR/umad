@@ -5,6 +5,12 @@ from provsysresource import ProvsysResourceDistiller
 from distiller import Distiller
 
 class ProvsysServersDistiller(Distiller):
+	doc_type = 'provsys'
+
+	@classmethod
+	def will_handle(url):
+		return url.startswith('provsysservers://')
+
 	def blobify(self):
 		server.requester    = 'umad_tma'
 		server.uri          = 'https://resources.engineroom.anchor.net.au/'

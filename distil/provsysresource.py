@@ -4,6 +4,11 @@ from provisioningclient import *
 from distiller import Distiller
 
 class ProvsysResourceDistiller(Distiller):
+	doc_type = 'provsys'
+
+	@classmethod
+	def will_handle(url):
+		return url.startswith('https://resources.engineroom.anchor.net.au/resources/')
 
 	@staticmethod
 	def vlan_to_document(vlan_resource):

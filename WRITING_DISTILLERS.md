@@ -34,16 +34,21 @@ Interface
 
 The interface is super simple:
 
-* You subclass the Distiller class
-* Your class implements a method named `blobify`
-* When called, `blobify` (usually) inspects `self.url` then gets to work
-    * The URL is opaque and may have a bogus schema and everything, what you do with it is up to you
-and is expected to return an iterator or list of documents.
-* Your callable returns an iterable of blobs to be indexed.
-    * `yield`ing is particularly elegant.
-* Blobs are a dictionary with two keys, a `url` and a `blob`. Because the
-  canonical URL for a document may be different from what you provided, the
-  distiller can clean it up for you. The blob is plain ascii text.
+* You subclass the Distiller class.
+* Your class implements two methods, `will_handle` and `blobify`, and provides
+  a class attribute, `doc_type`.
+* `will_handle` returns True or False indicating whether it can handle a given
+  URL. This is generally a simple string.startswith() check.
+* When called, `blobify` (usually) inspects `self.url` then gets to work.
+    * The URL is opaque and may have a bogus schema and everything, what you do
+      with it is up to you.
+* You return an iterable of documents to be indexed.
+    * Better yet, `yield`ing an iterator is particularly elegant.
+* Documents are a dictionary with two mandatory keys, `url` and `blob`, plus
+  any additional keys that you wish to include.
+    * A distiller may return multiple documents for a single `self.url`, which
+      is why each document includes its own `url`. It should also tidy the URL
+      into a canonical form if necessary, resolving any redirects.
 
 
 Optional keys

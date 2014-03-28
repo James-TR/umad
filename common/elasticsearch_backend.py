@@ -82,6 +82,7 @@ def delete_from_index(url):
 
 def valid_search_query(search_term):
 	"Return True/False as to whether the query is valid"
+	# XXX: This could probably just be "_all" for the index.
 	test_results = indices.validate_query(index=ELASTICSEARCH_SEARCH_INDEXES, q=search_term)
 	return test_results[u'valid']
 

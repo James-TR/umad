@@ -7,6 +7,11 @@ import html2text
 from distiller import Distiller
 
 class GenericHttpDistiller(Distiller):
+	doc_type = 'generic_http'
+
+	@classmethod
+	def will_handle(url):
+		return url.startswith( ('http://', 'https://') )
 
 	def blobify(self):
 		response = requests.get(self.url, verify=True)

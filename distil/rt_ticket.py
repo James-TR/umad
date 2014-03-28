@@ -19,6 +19,10 @@ from distiller import Distiller
 
 class RtTicketDistiller(Distiller):
 
+	@classmethod
+	def will_handle(url):
+		return url.startswith( ('rt://', 'https://rt.engineroom.anchor.net.au/') )
+
 	@staticmethod
 	def clean_message(msg):
 		fields_we_care_about = (
@@ -75,6 +79,10 @@ class RtTicketDistiller(Distiller):
 	# https://rt.engineroom.anchor.net.au/Ticket/Display.html?id=152
 	def tidy_url(self):
 		"Turn the RT URL into an API URL"
+
+		if self.url.startswith('rt://'):
+			self.url = self.url.replace('rt://', 'https://rt.engineroom.anchor.net.au/Ticket/Display.html?id=')
+
 		rt_url_match = re.match(r'https://rt\.engineroom\.anchor\.net\.au/Ticket/\w+\.html\?id=(\d+)', self.url)
 		if rt_url_match is None:
 			raise ValueError("This URL doesn't match our idea of an RT URL: %s" % self.url)
