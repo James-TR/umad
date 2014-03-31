@@ -1,3 +1,5 @@
-		<div id="output">
-			Your search query <span class="inline-query-display">{{ searchterm }}</span> is invalid, probably a syntax error.
+		<div class="alert alert-danger">
+			Your search query is invalid, probably a syntax error.
+			<br>
+			<span class="inline-query-display">{{ searchterm }}</span> 
 		</div> <!-- END output -->

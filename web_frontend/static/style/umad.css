@@ -3,32 +3,24 @@ body {
   color: #444444;
 }
 #container-fluid {
-  margin: 2em auto;
-  width: 80%;
+  margin: 0em auto;
+  width: 90%;
 }
+
 .umadlogo {
-  margin-left: 0.5em;
-  margin-right: 0.5em;
   vertical-align: middle;
-}
-.umadlogo-td {
-  width: 1em;
+  height: 2em;
 }
 
 .document-score {
-  font-family: sans-serif;
-  font-size: xx-large;
-  color: #aaaaaa;
-  position: absolute;
+  font-size: small;
   top: 0em;
   right: 0.1em;
-  opacity: 0.25;
+  opacity: 0.5;
+  position: absolute;
 }
+
 .inline-query-display {
-  background-color: #e4edf7;
-  padding: 0.25em;
-  margin: 0.25em;
-  border: 1px dotted black;
   font-family: monospace;
   font-size: 1.5em;
 }
@@ -78,11 +70,11 @@ ul {
   list-style-type: none;
 }
 ul#hits {
-  margin: 0em 0.25em 1em 0.25em;
+  /*margin: 0em 0.25em 1em 0.25em;*/
   padding-left: 0em;
 }
 ul#hits li {
-  margin: 1em;
+  margin: 1em 0em;
 }
 ul#hits li ul li.metadata {
   margin: 0.5em;
@@ -119,6 +111,7 @@ li {
   right: 2em;
   color: #444444;
   opacity: 0.5;
+  margin-right: 0.3em;
 }
 .result-card .doc-source-solo {
   position: absolute;
@@ -156,33 +149,20 @@ li {
 #search-toggles .doc-type span.right {
   float: right;
 }
-.highlight-red {
-  border-left: 3px solid red;
-}
-.highlight-miku {
-  border-left: 3px solid #3bb0b5;
-}
-.highlight-luka {
-  border-left: 3px solid #fb7fe2;
-}
-.highlight-portal-orange {
-  border-left: 3px solid #f8b134;
-}
-.highlight-portal-blue {
-  border-left: 3px solid #34a8f9;
-}
-.highlight-lavender {
-  border-left: 3px solid #b57edc;
-}
+.highlight-red           { border-left: 3px solid red; }
+.highlight-miku          { border-left: 3px solid #3bb0b5; }
+.highlight-luka          { border-left: 3px solid #fb7fe2; }
+.highlight-portal-orange { border-left: 3px solid #f8b134; }
+.highlight-portal-blue   { border-left: 3px solid #34a8f9; }
+
 .result-card .metadata-button .other-metadata {
-  position: absolute;
-  width: 20em;
-  border: 1px dotted #f3db92;
-  background-color: #ffeebb;
+  position: fixed;
+  min-width: 20em;
   top: 0em;
-  left: 1.5em;
-  z-index: 1;
+  right: 1.5em;
+  z-index: 25;
   visibility: hidden;
+  .
 }
 .result-card .metadata-button:hover .other-metadata {
   visibility: visible;
@@ -191,13 +171,13 @@ li {
   padding-left: 0em;
   font-size: small;
 }
-.result-card .metadata-button:hover span.lsf {
+.result-card .metadata-button:hover {
   color: #5555ff;
 }
 .result-card .reindex-button:hover {
   opacity: 1;
 }
-.result-card .reindex-button:hover span.lsf {
+.result-card .reindex-button:hover {
   color: #39e639;
 }
 .version-marker {
@@ -234,26 +214,6 @@ li {
   font-weight: normal;
   font-style: normal;
 }
-.lsf {
-  font-family: 'LigatureSymbols';
-  -webkit-text-rendering: optimizeLegibility;
-  -moz-text-rendering: optimizeLegibility;
-  -ms-text-rendering: optimizeLegibility;
-  -o-text-rendering: optimizeLegibility;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -ms-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
-  font-smoothing: antialiased;
-  text-decoration: none;
-  font-size: 130%;
-  margin-right: 0.3em;
-}
-.lsf a {
-  color: inherit;
-  text-decoration: none;
-}
 
 .jumbotron {
   padding-top: 12px;
@@ -268,4 +228,5 @@ li {
 
 #umadbox {
   border: none;
+  padding-left: 0px;
 }

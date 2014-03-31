@@ -18,6 +18,8 @@
 					<%
 					linktext = other_metadata.get('name', id)
 					linktext = other_metadata.get('title', linktext)
+					if linktext:
+						linktext = linktext[0].upper() + linktext[1:]
 					customer_name = other_metadata.get('customer_name', u'')
 					if customer_name:
 						customer_name = u'↜ {0}'.format(customer_name)
@@ -30,8 +32,9 @@
 					%>
 					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
 					<!-- OPTIONAL FOR NOW
-					<span class="lsf social-button-jabber" title="SHARE with #robots" onClick="javascript:shareWithSysadmins('{{ id.encode('utf8').encode('base64').replace('\n','').strip() }}', '{{ linktext.encode('utf8').encode('base64').replace('\n','').strip() }}');">sns</span>
-					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ id.encode('utf8') }}" data-text="{{ linktext.encode('utf8') }}" data-dnt="true">Tweet that shiz</a>
+					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ id.encode('utf8') }}" data-text="{{ linktext.encode('utf8') }}" data-dnt="true">
+					<span class="glyphicon glyphicon-thumbs-up" title="SHARE with #robots" onClick="javascript:shareWithSysadmins('{{ id.encode('utf8').encode('base64').replace('\n','').strip() }}', '{{ linktext.encode('utf8').encode('base64').replace('\n','').strip() }}');">sns</span>
+					Tweet that shiz</a>
 					-->
 				</div>
 
@@ -62,11 +65,11 @@
 
 				<div class="reindex-button">
 					% umad_indexer_query_string = urlencode({'url':id.encode('utf8')})
-					<span class="lsf" title="Reindex this result"><a href="https://umad-indexer.anchor.net.au/?{{! umad_indexer_query_string }}" target="_blank" onClick="evilUserReindex({{ json.dumps(hit) }})">sync</a></span>
+					<a href="https://umad-indexer.anchor.net.au/?{{! umad_indexer_query_string }}" target="_blank" onClick="evilUserReindex({{ json.dumps(hit) }})"><span class="glyphicon glyphicon-refresh" title="Reindex this result"></span></a>
 				</div>
 
 				<div class="metadata-button">
-					<span class="lsf">tag</span>
+					<span class="glyphicon glyphicon-tags"></span>
 
 					% # Only if the list is non-empty
 					% if other_metadata:
@@ -85,7 +88,7 @@
 							del(other_metadata['public_blob'])
 						end
 						%>
-					<div class="other-metadata">
+					<div class="other-metadata alert alert-success">
 						Other metadata
 						<ul>
 						% for key in sorted(other_metadata):
