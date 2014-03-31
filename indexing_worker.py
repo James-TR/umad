@@ -3,7 +3,6 @@ import os
 
 import redis
 
-from distil import get_distiller
 from elasticsearch_backend import *
 
 
@@ -28,7 +27,10 @@ debug("Debug logging is enabled")
 def index(url):
 	debug("URL to index: {0}".format(url))
 
-	d = get_distiller(url)
+	try:
+		d = get_distiller(url)
+	except Exception as e:
+		raise RuntimeError("Don't know how to handle URL: {0}".format(url))
 
 	for doc in d.docs:
 		if doc is None:
