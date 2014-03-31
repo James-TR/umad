@@ -3,7 +3,6 @@ from optparse import OptionParser
 from colorama import init as init_colorama
 from termcolor import colored
 
-from distil import get_distiller
 from elasticsearch_backend import *
 
 
