@@ -21,7 +21,7 @@ class RtTicketDistiller(Distiller):
 	doc_type = 'rt'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith( ('rt://', 'https://rt.engineroom.anchor.net.au/') )
 
 	@staticmethod

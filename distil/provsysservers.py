@@ -8,7 +8,7 @@ class ProvsysServersDistiller(Distiller):
 	doc_type = 'provsys'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith('provsysservers://')
 
 	def blobify(self):

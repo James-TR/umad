@@ -16,7 +16,7 @@ class MoinMapDistiller(Distiller):
 	doc_type = 'map'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith('https://map.engineroom.anchor.net.au/')
 
 	def tidy_url(self):

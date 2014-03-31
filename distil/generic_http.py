@@ -10,7 +10,7 @@ class GenericHttpDistiller(Distiller):
 	doc_type = 'generic_http'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith( ('http://', 'https://') )
 
 	def blobify(self):

@@ -15,7 +15,7 @@ class GollumDistiller(Distiller):
 	doc_type = 'docs'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith('https://docs.anchor.net.au/')
 
 	def tidy_url(self):

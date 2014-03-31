@@ -7,7 +7,7 @@ class ProvsysResourceDistiller(Distiller):
 	doc_type = 'provsys'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith('https://resources.engineroom.anchor.net.au/resources/')
 
 	@staticmethod

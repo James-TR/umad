@@ -8,7 +8,7 @@ class ProvsysVlansDistiller(Distiller):
 	doc_type = 'provsys'
 
 	@classmethod
-	def will_handle(url):
+	def will_handle(klass, url):
 		return url.startswith('provsysvlans://')
 
 	def blobify(self):
