@@ -18,6 +18,7 @@ from distiller import Distiller
 
 
 class RtTicketDistiller(Distiller):
+	doc_type = 'rt'
 
 	@classmethod
 	def will_handle(url):
