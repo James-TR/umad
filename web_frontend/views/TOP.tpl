@@ -2,9 +2,9 @@
 <html>
 <head>
 	<title>UMAD?</title>
-	<link rel="stylesheet" href="/static/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
-	<link rel="stylesheet" href="/static/css/bootstrap-theme.css">
+	<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="/static/style/umad-responsive.css">
 	<link rel="search" type="application/opensearchdescription+xml" title="UMAD?" href="/umad-opensearch.xml">
 
