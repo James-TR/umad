@@ -10,6 +10,8 @@ distillers = [
 	ProvsysServersDistiller ,
 	ProvsysVlansDistiller ,
 	CustomerDistiller ,
+	# This is a demo Distiller
+	#NewtypeDistiller ,
 	GenericHttpDistiller ,
 	]
 

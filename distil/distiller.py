@@ -12,6 +12,11 @@ class Distiller(object):
 		if os.environ.get('API_AUTH_USER') and os.environ.get('API_AUTH_PASS'):
 			self.auth['anchor_api'] = (os.environ.get('API_AUTH_USER'), os.environ.get('API_AUTH_PASS'))
 
+		# This is mock data, it's provided as a functional example of
+		# how the Distiller class can fulfil external dependencies for
+		# its subclasses.
+		self.auth['newtype'] = ('demoUser', 'demoPass')
+
 		self.accept_json = {'Accept':"application/json"}
 
 		self.docs = self.blobify()
