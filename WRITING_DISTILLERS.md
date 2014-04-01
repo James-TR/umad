@@ -11,20 +11,25 @@ the document.
 
 As part of a current hack to make searching faster/easier, documents will be
 indexed with a field whose name matches the `doc_type`. For example, RT support
-tickets have a `doc_type` of "rt", which will allow you to search for a
-domain-specific unique identifier, like so:
+tickets have a `doc_type` of "rt", which will allow you to intuitively search
+for RT support tickets like so:
 
-    rt:123456
+    rt:emergency
 
 This essentially makes the short `doc_type` a surrogate for specifying
-`doc_type:rt` in your search. The unique identifier is provided during
-indexing, in a field named `local_id`.
+`_type:rt` in your search. This field is mapped to the document's blob, so
+everything should Just Work as expected.
 
 
 Determining doc_type
 --------------------
 
-Your localconfig.py must provide XXX: continue here
+Your localconfig.py must provide...
+
+* A list, `distillers`, of Distiller subclasses.
+* A list, `ELASTICSEARCH_NODES`, of ES nodes to connect to, eg.: `[ "10.0.0.1:9200" ]`
+
+TBC
 
 
 Interface
@@ -32,15 +37,21 @@ Interface
 
 The interface is super simple:
 
-* You provide a callable named `blobify`
-* It's called with a single argument, a URL to the thing/s to be indexed. This
-  is opaque and may have a bogus schema and everything. This is your problem
-  for now.
-* Your callable returns an iterable of blobs to be indexed.
-    * `yield`ing is particularly elegant.
-* Blobs are a dictionary with two keys, a `url` and a `blob`. Because the
-  canonical URL for a document may be different from what you provided, the
-  distiller can clean it up for you. The blob is plain ascii text.
+* You subclass the Distiller class.
+* Your class implements two methods, `will_handle` and `blobify`, and provides
+  a class attribute, `doc_type`.
+* `will_handle` returns True or False indicating whether it can handle a given
+  URL. This is generally a simple string.startswith() check.
+* When called, `blobify` (usually) inspects `self.url` then gets to work.
+    * The URL is opaque and may have a bogus schema and everything, what you do
+      with it is up to you.
+* You return an iterable of documents to be indexed.
+    * Better yet, `yield`ing an iterator is particularly elegant.
+* Documents are a dictionary with two mandatory keys, `url` and `blob`, plus
+  any additional keys that you wish to include.
+    * A distiller may return multiple documents for a single `self.url`, which
+      is why each document includes its own `url`. It should also tidy the URL
+      into a canonical form if necessary, resolving any redirects.
 
 
 Optional keys
@@ -60,41 +71,42 @@ You may return additional keys in your blob, indeed this is encouraged. Addition
   documents get boosted higher (not yet implemented)
 
 
-Hello World distiller
-=====================
+An example distiller
+====================
 
-1. Create your module in the `distil/` directory, we're calling it
-   `helloworld.py`
+An example Distiller class is provided, under `distil/newtype.py`. If you want
+to implement a your own new document type, it should be enough to get you going
+by filling in the blanks.
 
-      import sys
-      import foo
-      import bambleweenie
+1. Choose a name for your new document type, restricting it to a short,
+   descriptive, unambiguous string of lowercase ascii characters is best. This
+   will be your **doctype**. Use underscores if you really must. Eg. `[a-z_]+`
 
-      def blobify(url):
-          result = {}
-          result['url'] = "hello://adam.jensen/greeting"
-          result['blob'] = "I didn't ask for this"
-          return [result]
+2. Copy `newtype.py` to a new file, naming it `<doctype>.py` is best.
 
-2. You need to hook your module into the framework, add yourself to
-   `__init__.py`
+3. Implement the functionality as directed in the example. Note that you'll
+   have also named your new Distiller class, eg. `NewtypeDistiller`
 
-      # At the top
-      import helloworld
+4. Import your new Distiller class in `distil/__init__.py`, eg.:
 
-      # And in the URL-matching messiness
-      ...
-      elif url.startswith('hello://'):
-          self.fetcher = helloworld
+      from newtype import NewtypeDistiller
 
-3. Tell UMAD how to recognise the new document type, this unfortunately
-   requires some duplication of effort and code. Add something like the
-   following to your `localconfig.py`
+5. Add your new Distiller class to `localconfig.py`, eg.:
 
-      # Add to KNOWN_DOC_TYPES
-      KNOWN_DOC_TYPES.append('newtype')
+      # ... in distillers = []
+      NewtypeDistiller ,
 
-      # Add a detection case in determine_doc_type()
-      ...
-      if url.startswith('https://newtype.api.example.com/'):
-          return "newtype"
+6. Optionally style the class up for display, this is highily recommended.
+   Select a colour and add the necessary code.
+
+      # web_frontend/static/style/umad.css
+      .highlight-newtype {
+        border-left: 3px solid #abcdef;
+      }
+
+      # web_frontend/umad.py
+      if url.startswith('http://new.type.ms/'):
+          return ('Newtype', 'highlight-newtype')
+
+      # web_frontend/views/result_hit.tpl
+      highlight_classes_to_doctypes['highlight-newtype'] = "newtypes"

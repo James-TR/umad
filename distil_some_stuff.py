@@ -1,10 +1,8 @@
 import sys
-import os
 from optparse import OptionParser
 from colorama import init as init_colorama
 from termcolor import colored
 
-import distil
 from elasticsearch_backend import *
 
 
@@ -16,8 +14,6 @@ def debug(msg):
 		sys.stderr.write(msg)
 		sys.stderr.write('\n')
 		sys.stderr.flush()
-
-UMAD_INDEXER_URL = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
 
 def red(msg):
 	return colored(msg, 'red')
@@ -48,15 +44,13 @@ def main(argv=None):
 
 
 	for url in urls:
-		if url.startswith('/') and os.path.exists(url):
-			url = 'file://' + url
 		debug(red("-" * len("URL: %s"%url)))
 		debug(red("URL: %s" % url))
 		debug(red("-" * len("URL: %s"%url)))
 
 		try:
-			d = distil.Distiller(url, indexer_url=UMAD_INDEXER_URL)
-		except distil.NoUrlHandler:
+			d = get_distiller(url)
+		except:
 			print "Don't know how to handle URL: %s" % url
 			continue
 
@@ -100,4 +94,3 @@ def main(argv=None):
 
 if __name__ == "__main__":
 	sys.exit(main())
-
