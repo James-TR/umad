@@ -7,6 +7,7 @@ distillers = [
 	ProvsysResourceDistiller ,
 	ProvsysServersDistiller ,
 	ProvsysVlansDistiller ,
+	CustomerDistiller ,
 	GenericHttpDistiller ,
 	]
 
