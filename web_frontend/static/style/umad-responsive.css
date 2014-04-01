@@ -10,19 +10,6 @@ ul#hits li {
 	margin: 0.5em 0em;
 }
 
-#search-toggles {
-	position: static;
-	margin 0em auto;
-}
-#search-toggles .doc-type {
-	width: auto;
-	display: inline-block;
-	margin: 0.5em auto;
-}
-#search-toggles .doc-type span.right {
-	margin-left: 0.5em;
-}
-
 /* Documents' other metadata appears in a position:absolute bubble */
 .result-card .metadata-button .other-metadata {
 	width: 16em;
