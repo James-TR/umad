@@ -11,20 +11,23 @@ the document.
 
 As part of a current hack to make searching faster/easier, documents will be
 indexed with a field whose name matches the `doc_type`. For example, RT support
-tickets have a `doc_type` of "rt", which will allow you to search for a
-domain-specific unique identifier, like so:
+tickets have a `doc_type` of "rt", which will allow you to intuitively search
+for RT support tickets like so:
 
-    rt:123456
+    rt:emergency
 
 This essentially makes the short `doc_type` a surrogate for specifying
-`doc_type:rt` in your search. The unique identifier is provided during
-indexing, in a field named `local_id`.
+`_type:rt` in your search. This field is mapped to the document's blob, so
+everything should Just Work as expected.
 
 
 Determining doc_type
 --------------------
 
 Your localconfig.py must provide...
+
+* A list, `distillers`, of Distiller subclasses.
+* A list, `ELASTICSEARCH_NODES`, of ES nodes to connect to, eg.: `[ "10.0.0.1:9200" ]`
 
 TBC
 
@@ -68,31 +71,42 @@ You may return additional keys in your blob, indeed this is encouraged. Addition
   documents get boosted higher (not yet implemented)
 
 
-Hello World distiller
-=====================
+An example distiller
+====================
 
-1. Create your module in the `distil/` directory, we're calling it
-   `helloworld.py`
+An example Distiller class is provided, under `distil/newtype.py`. If you want
+to implement a your own new document type, it should be enough to get you going
+by filling in the blanks.
 
-      import sys
-      import foo
-      import bambleweenie
+1. Choose a name for your new document type, restricting it to a short,
+   descriptive, unambiguous string of lowercase ascii characters is best. This
+   will be your **doctype**. Use underscores if you really must. Eg. `[a-z_]+`
 
-      def blobify(url):
-          result = {}
-          result['url'] = "hello://adam.jensen/greeting"
-          result['blob'] = "I didn't ask for this"
-          return [result]
+2. Copy `newtype.py` to a new file, naming it `<doctype>.py` is best.
 
-2. You need to hook your module into the framework, add yourself to
-   `__init__.py`
+3. Implement the functionality as directed in the example. Note that you'll
+   have also named your new Distiller class, eg. `NewtypeDistiller`
 
-      # At the top
-      import helloworld
+4. Import your new Distiller class in `distil/__init__.py`, eg.:
 
-      # And in the URL-matching messiness
-      ...
-      elif url.startswith('hello://'):
-          self.fetcher = helloworld
+      from newtype import NewtypeDistiller
 
+5. Add your new Distiller class to `localconfig.py`, eg.:
 
+      # ... in distillers = []
+      NewtypeDistiller ,
+
+6. Optionally style the class up for display, this is highily recommended.
+   Select a colour and add the necessary code.
+
+      # web_frontend/static/style/umad.css
+      .highlight-newtype {
+        border-left: 3px solid #abcdef;
+      }
+
+      # web_frontend/umad.py
+      if url.startswith('http://new.type.ms/'):
+          return ('Newtype', 'highlight-newtype')
+
+      # web_frontend/views/result_hit.tpl
+      highlight_classes_to_doctypes['highlight-newtype'] = "newtypes"
