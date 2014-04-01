@@ -27,8 +27,9 @@
 					if doc_type:
 						del(other_metadata[doc_type])
 					end
+					href = other_metadata.get('functional_url', id)
 					%>
-					<a href="{{ id.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
+					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
 					<!-- OPTIONAL FOR NOW
 					<span class="lsf social-button-jabber" title="SHARE with #robots" onClick="javascript:shareWithSysadmins('{{ id.encode('utf8').encode('base64').replace('\n','').strip() }}', '{{ linktext.encode('utf8').encode('base64').replace('\n','').strip() }}');">sns</span>
 					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ id.encode('utf8') }}" data-text="{{ linktext.encode('utf8') }}" data-dnt="true">Tweet that shiz</a>
@@ -39,7 +40,26 @@
 				<div class="hiturl">{{ id.encode('utf8') }}</div>
 				% end
 
-				<span class="excerpt">{{! extract.encode('utf8') }}</span><br />
+				% if doc_type == 'customer':
+				<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
+					<% output = ''
+					if other_metadata.has_key('primary_contacts'):
+						output += '\n' + other_metadata['primary_contacts']
+					end
+					if other_metadata.has_key('billing_contacts'):
+						output += '\n' + other_metadata['billing_contacts']
+					end
+					if other_metadata.has_key('technical_contacts'):
+						output += '\n' + other_metadata['technical_contacts']
+					end
+					new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value=' + str(other_metadata['customer_id'])
+					%>
+					{{ output.encode('utf8') }}
+					<a href={{ new_ticket_link }} target="_blank" >Create a ticket</a>
+				</span><br />
+				% else:
+					<span class="excerpt">{{! extract.encode('utf8') }}</span><br />
+				% end
 
 				<div class="reindex-button">
 					% umad_indexer_query_string = urlencode({'url':id.encode('utf8')})
