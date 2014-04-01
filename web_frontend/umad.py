@@ -30,18 +30,20 @@ def highlight_document_source(url):
 	# - highlight-portal-blue
 	# - highlight-lavender
 	# - highlight-red
+	# - highlight-coral
+	# - highlight-orange
 	#
 	# We return a 2-element dict containing a pretty_name and css_class
 	if url.startswith('https://map.engineroom.anchor.net.au/'):
 		return ('Map',      'highlight-miku')
 	if url.startswith('https://rt.engineroom.anchor.net.au/'):
-		return ('RT',       'highlight-luka')
+		return ('RT',       'highlight-lavender')
 	if url.startswith('https://resources.engineroom.anchor.net.au/'):
-		return ('Provsys',  'highlight-portal-orange')
+		return ('Provsys',  'highlight-portal-blue')
 	if url.startswith('https://docs.anchor.net.au/'):
-		return ('Gollum',   'highlight-portal-blue')
+		return ('Gollum',   'highlight-portal-orange')
 	if url.startswith('https://customer.api.anchor.com.au/customers/'):
-		return ('Customer', 'highlight-lavender')
+		return ('Customer', 'highlight-orange')
 
 	return ('DEFAULT', '')
 

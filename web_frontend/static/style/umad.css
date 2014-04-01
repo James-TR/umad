@@ -132,15 +132,9 @@ li {
   color: #995555;
 }
 
-#search-toggles {
-  position: static;
-}
-#search-toggles .doc-type {
+.doc-type {
   display: inline-block;
-  margin: 0.5em auto;
-  border-top: 1px dashed red;
-  border-right: 1px dashed red;
-  border-bottom: 1px dashed red;
+  margin-top: 0.5em;
 }
 
 .highlight-red           { border-left: 3px solid red; }
@@ -148,6 +142,14 @@ li {
 .highlight-luka          { border-left: 3px solid #fb7fe2; }
 .highlight-portal-orange { border-left: 3px solid #f8b134; }
 .highlight-portal-blue   { border-left: 3px solid #34a8f9; }
+.highlight-lavender      { border-left: 3px solid #b57edc; }
+
+/* From https://kuler.adobe.com/Sunset-Camping-color-theme-3645549/ */
+.highlight-dark-purple   { border-left: 3px solid #2D112C; }
+.highlight-plum          { border-left: 3px solid #530031; }
+.highlight-dark-pink     { border-left: 3px solid #820233; }
+.highlight-coral         { border-left: 3px solid #CA293E; }
+.highlight-orange        { border-left: 3px solid #EF4339; }
 
 .result-card .metadata-button .other-metadata {
   position: fixed;
@@ -212,6 +214,7 @@ li {
 .jumbotron {
   padding-top: 12px;
   padding-bottom: 12px;
+  margin-top: 12px;
   margin-bottom: 12px;
 }
 
