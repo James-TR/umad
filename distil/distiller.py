@@ -12,6 +12,8 @@ class Distiller(object):
 		if os.environ.get('API_AUTH_USER') and os.environ.get('API_AUTH_PASS'):
 			self.auth['anchor_api'] = (os.environ.get('API_AUTH_USER'), os.environ.get('API_AUTH_PASS'))
 
+		self.accept_json = {'Accept':"application/json"}
+
 		self.docs = self.blobify()
 
 	@staticmethod
