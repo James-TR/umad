@@ -93,7 +93,6 @@ class RtTicketDistiller(Distiller):
 
 
 	def blobify(self):
-
 		# Customer Name cache
 		try:
 			cn_cache = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -113,11 +112,8 @@ class RtTicketDistiller(Distiller):
 		self.tidy_url()
 		ticket_url   = self.ticket_url
 
-		headers = {}
-		headers['Accept'] = 'application/json'
-
 		# Get ticket from API
-		ticket_response = requests.get(ticket_url, auth=api_credentials, verify=True, headers=headers)
+		ticket_response = requests.get(ticket_url, auth=api_credentials, verify=True, headers=self.accept_json)
 		try:
 			ticket_response.raise_for_status()
 		except:
@@ -168,7 +164,7 @@ class RtTicketDistiller(Distiller):
 		if customer_id:
 			if cn_get(customer_id) is None:
 				# We need to retrieve it from the customer API
-				customer_response = requests.get(customer_url, auth=api_credentials, verify=True, headers=headers)
+				customer_response = requests.get(customer_url, auth=api_credentials, verify=True, headers=self.accept_json)
 				if customer_response.status_code != 200:
 					retrieved_name = '__NOT_FOUND__'
 				else:
@@ -190,7 +186,7 @@ class RtTicketDistiller(Distiller):
 		ticket_lastupdated = ticket_lastupdated.astimezone(tzutc())
 
 		# Get associated messages from API
-		messages_response  = requests.get(TICKET_MESSAGE_URL_BASE, params={'ticket_url': self.ticket_url}, auth=api_credentials, verify=True, headers=headers)
+		messages_response  = requests.get(TICKET_MESSAGE_URL_BASE, params={'ticket_url': self.ticket_url}, auth=api_credentials, verify=True, headers=self.accept_json)
 		try:
 			messages_response.raise_for_status()
 		except:
