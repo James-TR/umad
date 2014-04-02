@@ -95,7 +95,7 @@ def search():
 	# Some people are weird, yo
 	try: count = int(count)
 	except: count = MAX_HITS
-	debug("Search term: {0}, with count of {1}".format(q, count))
+	debug(u"Search term: {0}, with count of {1}".format(q, count).encode('utf8'))
 
 	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
 	template_dict = {}
