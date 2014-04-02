@@ -91,6 +91,12 @@ def server_static(filepath):
 @route('/')
 @view('mainpage')
 def search():
+	# Fetch environment
+	VERSION_STRING = 'no version string found'
+	if os.path.exists('RUNNING_VERSION'):
+		with open('RUNNING_VERSION', 'r') as f:
+			VERSION_STRING = f.readline().strip()
+
 	q     = request.query.q     or ''
 	count = request.query.count or MAX_HITS
 	# Some people are weird, yo
