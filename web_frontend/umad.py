@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf8
 import sys
 import os
 import re
@@ -95,6 +96,16 @@ def search():
 	# Some people are weird, yo
 	try: count = int(count)
 	except: count = MAX_HITS
+
+	# XXX: This addresses a current problem with the resultant queries
+	# apparently not limiting us to customer records. That said, this will
+	# probably be the correct ongoing solution for dealing with
+	# "<doctype>:" prefixes on queries, instead of polluting the ES index
+	# with a spurious field.
+	if q.startswith(u'customer:'):
+		q = q.replace(u'customer:', u'_type:customer ')
+		debug(u"Search term starts with customer:, rewriting to _type:customer".encode('utf8'))
+
 	debug(u"Search term: {0}, with count of {1}".format(q, count).encode('utf8'))
 
 	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
