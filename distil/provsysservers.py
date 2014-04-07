@@ -16,7 +16,7 @@ class ProvsysServersDistiller(Distiller):
 		server.uri          = 'https://resources.engineroom.anchor.net.au/'
 		server.user         = "script"
 		server.password     = "script"
-		server.apikey       = "Sysadmin convenience script"
+		server.apikey       = "umad_distiller"
 		server.ca_cert_file = None
 
 		results = Resource.search(supertype="Generic OS install")
