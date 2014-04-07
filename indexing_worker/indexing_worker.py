@@ -72,7 +72,9 @@ def delete(url):
 def main(argv=None):
 	debug("Debug logging is enabled")
 
-	teh_redis = redis.StrictRedis(host='localhost', port=6379, db=0)
+	redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
+	redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
+	teh_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=0)
 
 	while True:
 		try:
