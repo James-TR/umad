@@ -83,7 +83,7 @@ def delete_from_index(url):
 def valid_search_query(search_term):
 	"Return True/False as to whether the query is valid"
 	# XXX: This could probably just be "_all" for the index.
-	test_results = indices.validate_query(index=ELASTICSEARCH_SEARCH_INDEXES, q=search_term)
+	test_results = indices.validate_query(index="_all", q=search_term)
 	return test_results[u'valid']
 
 def type_boost(doctype, boost_factor):
@@ -191,10 +191,16 @@ def search_index(search_term, max_hits=0):
 			q_dict['query']['function_score']['query']['query_string']['fields'].append("local_id^3")
 
 		idx_name = "umad_{0}".format
-		if max_hits:
-			results = es.search(index=idx_name(backend), body=q_dict, size=max_hits)
-		else:
-			results = es.search(index=idx_name(backend), body=q_dict) # ES defaults to 10
+
+		# Don't freak out if some indices don't exist yet.
+		try:
+			if max_hits:
+				results = es.search(index=idx_name(backend), body=q_dict, size=max_hits)
+			else:
+				results = es.search(index=idx_name(backend), body=q_dict) # ES defaults to 10
+		except elasticsearch.NotFoundError as e:
+			continue
+
 		docs = results['hits']['hits']
 		hits = [ build_hit(doc) for doc in docs ]
 
