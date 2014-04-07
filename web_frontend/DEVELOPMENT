@@ -7,5 +7,4 @@ installed with pip (or easy_install, if you must):
 * elasticsearch - for connecting to your ElasticSearch cluster
 * bottle - for HTTP request routing and handling
 * dateutil - for timestamp mangling (try your distro packages)
-* pyScss - for CSS preprocessing in Makefile (pip or distro)
 * WSGI app container (optional)

@@ -16,7 +16,7 @@ distillers = [
 	]
 
 # A list of hostnames/IPs and ports, passed straight to the ES constructor.
-ELASTICSEARCH_NODES = [ "umad.anchor.net.au:9200" ]
+ELASTICSEARCH_NODES = [ "umad1.syd1.anchor.net.au:9200", "umad2.syd1.anchor.net.au:9200", "umad3.syd1.anchor.net.au:9200" ]
 
 # >>> Make your edits ABOVE here <<<
 
