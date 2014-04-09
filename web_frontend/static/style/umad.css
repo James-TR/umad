@@ -136,7 +136,7 @@ li {
   margin-top: 0.5em;
 }
 
-.highlight-red           { border-left: 3px solid red; }
+.highlight-red           { border-left: 3px solid #FF3333; }
 .highlight-miku          { border-left: 3px solid #3bb0b5; }
 .highlight-luka          { border-left: 3px solid #fb7fe2; }
 .highlight-portal-orange { border-left: 3px solid #f8b134; }
@@ -148,7 +148,9 @@ li {
 .highlight-plum          { border-left: 3px solid #530031; }
 .highlight-dark-pink     { border-left: 3px solid #820233; }
 .highlight-coral         { border-left: 3px solid #CA293E; }
-.highlight-orange        { border-left: 3px solid #EF4339; }
+.highlight-orange        { border-left: 3px solid #FF530D; }
+
+.highlight-pink          { border-left: 3px solid #E80C7A; }
 
 .result-card .metadata-button .other-metadata {
   position: fixed;
