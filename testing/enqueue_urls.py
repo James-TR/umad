@@ -16,5 +16,5 @@ for fh in args.input:
 	for URL in fh.readlines():
 		URL = URL.strip()
 		if URL:
-			r = request_method(args.listener, params={'url':URL.strip()})
+			r = request_method(args.listener, params={'url':URL.strip()}, verify=False)
 			print r.text
