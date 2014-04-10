@@ -11,12 +11,8 @@ indices = elasticsearch.client.IndicesClient(es)
 
 class InvalidDocument(Exception): pass
 
-
-# XXX: This should be cleaned up to take a single argument, the 'document'.
-# In all cases, we're called as:
-#     add_to_index(doc['url'], doc)
-# We should pull out the URL ourselves.
-def add_to_index(key, document):
+def add_to_index(document):
+	key = document['url']
 	doc_type = determine_doc_type(key)
 	index_name = "umad_%s" % doc_type
 
