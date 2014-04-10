@@ -62,17 +62,6 @@ def delete_from_index(url):
 	except elasticsearch.exceptions.NotFoundError as e:
 		pass
 
-	# XXX: nuke this one day
-	# Get rid of it from the legacy index as well
-	try:
-		es.delete(
-			index = "umad",
-			doc_type = doc_type,
-			id = url
-		)
-	except elasticsearch.exceptions.NotFoundError as e:
-		pass
-
 	return
 
 
