@@ -99,7 +99,7 @@ class GollumDistiller(Distiller):
 			title = local_id
 
 		# If the first line of the page is the same as the title, don't add it into the blob and excerpt
-		if page_lines[0].endswith(title.replace(' ', '')):
+		if page_lines[0].replace(' ','').endswith(title.replace(' ', '')):
 			del(page_lines[0])
 
 		# Content is now considered tidy
