@@ -140,17 +140,20 @@ class CustomerDistiller(Distiller):
 			#'last_updated':     customer_lastupdated,
 			}
 
-		if primary_contacts:
-			primary_contacts_blob = u"Primary contacts: {0}".format(', '.join([ blobify_contact(x) for x in primary_contacts ])).encode('utf8')
-			customerblob['primary_contacts'] = primary_contacts_blob
+		primary_contacts_joined = ', '.join([ blobify_contact(x) for x in primary_contacts ])
+		if primary_contacts_joined:
+			primary_contacts_blob = u"Primary contacts: {0}".format(primary_contacts_joined).encode('utf8')
+			customerblob['primary_contact'] = primary_contacts_blob
 			customerblob['blob'] += '\n' + primary_contacts_blob
-		if billing_contacts:
-			billing_contacts_blob = u"Billing contacts: {0}".format(', '.join([ blobify_contact(x) for x in billing_contacts ])).encode('utf8')
-			customerblob['billing_contacts'] = billing_contacts_blob
+		billing_contacts_joined = ', '.join([ blobify_contact(x) for x in billing_contacts ])
+		if billing_contacts_joined:
+			billing_contacts_blob = u"Billing contacts: {0}".format(billing_contacts_joined).encode('utf8')
+			customerblob['billing_contact'] = billing_contacts_blob
 			customerblob['blob'] += '\n' + billing_contacts_blob
-		if alternative_contacts:
-			technical_contacts_blob = u"Technical contacts: {0}".format(', '.join([ blobify_contact(x) for x in alternative_contacts ])).encode('utf8')
-			customerblob['technical_contacts'] = technical_contacts_blob
+		technical_contacts_joined = ', '.join([ blobify_contact(x) for x in alternative_contacts ])
+		if technical_contacts_joined:
+			technical_contacts_blob = u"Technical contacts: {0}".format(technical_contacts_joined).encode('utf8')
+			customerblob['technical_contact'] = technical_contacts_blob
 			customerblob['blob'] += '\n' + technical_contacts_blob
 
 		yield customerblob
