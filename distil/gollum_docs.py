@@ -98,6 +98,10 @@ class GollumDistiller(Distiller):
 		if title == 'Home':
 			title = local_id
 
+		# If the first line of the page is the same as the title, don't add it into the blob and excerpt
+		if page_lines[0].endswith(title.replace(' ', '')):
+			del(page_lines[0])
+
 		# Content is now considered tidy
 		blob = '\n'.join([title]+page_lines)
 
