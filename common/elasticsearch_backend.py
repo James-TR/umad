@@ -24,10 +24,6 @@ def add_to_index(document):
 	if 'blob' not in document:
 		raise InvalidDocument("The document MUST have a 'blob' field, cannot add to index: {0}".format(document))
 
-	# Allow the user to intuitively specify a doc_type as a search field
-	if doc_type != "UNTYPED":
-		document[doc_type] = document['blob']
-
 	# Pass the document's type along as extra metadata, for the renderer's
 	# benefit.
 	document['doc_type'] = doc_type
