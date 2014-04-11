@@ -1,4 +1,5 @@
 import sys
+import os
 from provsys_auditlog_lib import AuditlogScratchpad
 
 def main(argv=None):
@@ -9,7 +10,10 @@ def main(argv=None):
 	if type(argv) != type([]):
 		argv = [argv]
 
-	scratchpad = AuditlogScratchpad()
+	redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
+	redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
+
+	scratchpad = AuditlogScratchpad(host=redis_server_host, port=redis_server_port)
 
 	# SET mode
 	if argv:
