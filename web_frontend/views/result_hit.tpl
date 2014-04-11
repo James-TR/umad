@@ -30,27 +30,44 @@
 					-->
 				</div>
 
-				% if "name" in other_metadata or "title" in other_metadata:
-				<div class="hiturl">{{ id.encode('utf8') }}</div>
+				<!-- Some doc types don't actually have URLs, so we don't display them -->
+				% if doc_type not in ['domain']:
+					% if "name" in other_metadata or "title" in other_metadata:
+					<div class="hiturl">{{ id.encode('utf8') }}</div>
+					% end
 				% end
 
 				% if doc_type == 'customer':
-				<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
-					<% output = ''
-					if other_metadata.has_key('primary_contacts'):
-						output += '\n' + other_metadata['primary_contacts']
-					end
-					if other_metadata.has_key('billing_contacts'):
-						output += '\n' + other_metadata['billing_contacts']
-					end
-					if other_metadata.has_key('technical_contacts'):
-						output += '\n' + other_metadata['technical_contacts']
-					end
-					new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value=' + str(other_metadata['customer_id'])
-					%>
-					{{ output.encode('utf8') }}
-					<a href={{ new_ticket_link }} target="_blank" >Create a ticket</a>
-				</span><br />
+					<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
+						<% output = ''
+						if other_metadata.has_key('primary_contacts'):
+							output += '\n' + other_metadata['primary_contacts']
+						end
+						if other_metadata.has_key('billing_contacts'):
+							output += '\n' + other_metadata['billing_contacts']
+						end
+						if other_metadata.has_key('technical_contacts'):
+							output += '\n' + other_metadata['technical_contacts']
+						end
+						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value=' + str(other_metadata['customer_id'])
+						%>
+						{{ output.encode('utf8') }}
+						<a href={{ new_ticket_link }} target="_blank" >Create a ticket</a>
+					</span><br />
+				% elif doc_type == 'domain':
+					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}
+						Customer: {{ other_metadata['customer_name'] }} ({{ other_metadata['customer_id'] }})
+						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} ({{ other_metadata['owner_contact']['org_name'] }}) {{ other_metadata['owner_contact']['email'] }}\\
+						<% output = ''
+						if other_metadata.has_key('au_registrant_info'):
+							output += '\n' + "Registrant: {} ({} {}) Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
+						end
+						if other_metadata.has_key('nameservers'):
+							output += '\n' + "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
+						end
+						%>
+						{{ output.encode('utf8') }}
+					</span>
 				% else:
 					<span class="excerpt">{{! extract.encode('utf8') }}</span><br />
 				% end

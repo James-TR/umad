@@ -44,7 +44,9 @@ def highlight_document_source(url):
 	if url.startswith('https://docs.anchor.net.au/'):
 		return ('Gollum',   'highlight-portal-orange')
 	if url.startswith('https://customer.api.anchor.com.au/customers/'):
-		return ('Customer', 'highlight-orange')
+		return ('Customer', 'highlight-pink')
+	if url.startswith('https://domains.anchor.com.au/'):
+		return ('Domain', 'highlight-orange')
 
 	return ('DEFAULT', '')
 

@@ -74,7 +74,7 @@ def main(argv=None):
 				debug(blue("400 chars of blob: {0}".format(trimmed_blob)))
 			else: # unicode
 				debug(blue(u"400 chars of blob: {0}".format(trimmed_blob)))
-			add_to_index(doc['url'], doc)
+			add_to_index(doc)
 			debug(green("Success!"))
 			debug("")
 

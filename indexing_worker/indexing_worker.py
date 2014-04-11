@@ -53,7 +53,7 @@ def index(url):
 			debug("400 chars of blob: {0}".format(trimmed_blob))
 		else: # unicode
 			debug(u"400 chars of blob: {0}".format(trimmed_blob))
-		add_to_index(doc['url'], doc)
+		add_to_index(doc)
 		mention("Successfully added to index: %(url)s" % doc)
 		debug("")
 
