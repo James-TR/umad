@@ -94,6 +94,7 @@ def server_static(filepath):
 @view('mainpage')
 def search():
 	# Fetch environment
+	global VERSION_STRING
 	VERSION_STRING = 'no version string found'
 	if os.path.exists('RUNNING_VERSION'):
 		with open('RUNNING_VERSION', 'r') as f:
@@ -115,8 +116,6 @@ def search():
 	template_dict['valid_search_query'] = True
 	template_dict['doc_types_present'] = set()
 
-	# Determined at startup and filled in
-	global VERSION_STRING
 	template_dict['version_string'] = VERSION_STRING
 
 
