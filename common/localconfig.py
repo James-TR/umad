@@ -22,7 +22,7 @@ ELASTICSEARCH_NODES = [ "umad1.syd1.anchor.net.au:9200", "umad2.syd1.anchor.net.
 # >>> Make your edits ABOVE here <<<
 
 
-KNOWN_DOC_TYPES = [ d.doc_type for d in distillers ]
+KNOWN_DOC_TYPES = { d.doc_type for d in distillers }
 
 def get_distiller(url):
 	'''Return a distiller that's suitable for the URL provided'''
