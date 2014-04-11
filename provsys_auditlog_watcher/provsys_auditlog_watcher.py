@@ -42,7 +42,12 @@ def debug(msg=''):
 AUDITLOGS_URL = 'https://resources.engineroom.anchor.net.au/logs'
 AUDITLOG_ENTRY_URL_RE = re.compile(r'^{0}/(\d+)$'.format(AUDITLOGS_URL))
 
-UMAD_INDEXER_URL = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
+UMAD_INDEXER_URL        = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
+UMAD_INDEXER_VERIFY_SSL = os.environ.get('UMAD_INDEXER_VERIFY_SSL', True)
+if UMAD_INDEXER_VERIFY_SSL == 'True':
+	UMAD_INDEXER_VERIFY_SSL = True
+if UMAD_INDEXER_VERIFY_SSL == 'False':
+	UMAD_INDEXER_VERIFY_SSL = False
 
 redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
 redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
@@ -113,7 +118,7 @@ def main(argv=None):
 			# inbetween, would result in the second update being
 			# ignored.
 			if resource_url != last_successful_enqueued_url:
-				r = requests.get(UMAD_INDEXER_URL, params={'url':resource_url})
+				r = requests.get(UMAD_INDEXER_URL, params={'url':resource_url}, verify=UMAD_INDEXER_VERIFY_SSL)
 				if r.status_code == 200:
 					last_successful_enqueued_url = resource_url
 					debug("\tSuccess enqueueing {0}".format(resource_url))
