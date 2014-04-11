@@ -1,12 +1,6 @@
 import re
 import redis
 
-class InvalidAuditlogPosition(Exception): pass
-
-class HumanIsDeadMismatch(Exception): pass
-
-class AuditlogPositionUnknown(Exception): pass
-
 def debug(msg):
 	pass # Comment out the next line to suppress debug output
 	#print msg
@@ -38,7 +32,7 @@ class AuditlogScratchpad(object):
 		position, timestamp = pipeline.execute()
 
 		if not position:
-			raise AuditlogPositionUnknown("No record of current auditlog position, have you primed the scratchpad yet?")
+			raise LookupError("No record of current auditlog position, have you primed the scratchpad yet?")
 		position = int(position)
 
 		# XXX: ignore any timestamp problems right now
@@ -48,7 +42,7 @@ class AuditlogScratchpad(object):
 	def set(self, new_position, position_timestamp):
 		new_position = str(new_position)
 		if not re.match(r'^[1-9][0-9]*$', new_position):
-			raise InvalidAuditlogPosition("Audit log position must be only digits")
+			raise TypeError("Audit log position must be only digits")
 
 		new_position = int(new_position)
 		debug("Specified position is {0}, timestamp is {1}".format(new_position, position_timestamp))
@@ -64,8 +58,8 @@ class AuditlogScratchpad(object):
 		debug("Recorded auditlog position is {0}, timestamp is {1}".format(reread_position, reread_timestamp))
 
 		if new_position != reread_position:
-			raise HumanIsDeadMismatch("Mismatch between given position and value re-read from scratchpad, something bad and unexpected happened :( ")
+			raise RuntimeError("Mismatch between given position and value re-read from scratchpad, something bad and unexpected happened :( ")
 		if position_timestamp != reread_timestamp:
-			raise HumanIsDeadMismatch("Mismatch between given timestamp and value re-read from scratchpad, something bad and unexpected happened :( ")
+			raise RuntimeError("Mismatch between given timestamp and value re-read from scratchpad, something bad and unexpected happened :( ")
 
 		return (reread_position, reread_timestamp)

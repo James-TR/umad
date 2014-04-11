@@ -34,10 +34,6 @@ import time
 
 from provsys_auditlog_lib import AuditlogScratchpad
 
-class FailedToRetrieveAuditlogs(Exception): pass
-
-class InvalidAuditlogEntryUrl(Exception): pass
-
 def debug(msg=''):
 	pass # uncomment the following line to enable debug output
 	print msg
@@ -56,7 +52,7 @@ pres_key = "provsys_resource_id:{0}".format
 def get_newer_than(last_known_good):
 	response = requests.get(AUDITLOGS_URL, auth=('script','script'), verify='AnchorCA.pem', headers=json_headers, params={'id':'>{0}'.format(last_known_good), 'apikey':"UMAD provsys log watcher"})
 	if response.status_code != 200:
-		raise FailedToRetrieveAuditlogs("Didn't get a 200 Success while retrieving auditlog entries newer than {0}, something has exploded badly, bailing".format(last_known_good))
+		raise RuntimeError("Didn't get a 200 Success while retrieving auditlog entries newer than {0}, something has exploded badly, bailing".format(last_known_good))
 
 	auditlog_entries = json.loads(response.content)
 	return auditlog_entries
@@ -66,7 +62,7 @@ def fetch_entry(resource_url):
 	debug("Fetching auditlog entry: {0}".format(resource_url))
 	response = requests.get(resource_url, auth=('script','script'), verify='AnchorCA.pem', headers=json_headers)
 	if response.status_code != 200:
-		raise FailedToRetrieveAuditlogs("Didn't get a 200 Success while retrieving auditlog entry {0}, something exploded, bailing".format(resource_url))
+		raise RuntimeError("Didn't get a 200 Success while retrieving auditlog entry {0}, something exploded, bailing".format(resource_url))
 
 	auditlog_entry = json.loads(response.content)
 	return auditlog_entry
@@ -92,7 +88,7 @@ def main(argv=None):
 	for url in new_auditlog_entries:
 		new_auditlog_position = AUDITLOG_ENTRY_URL_RE.match(url)
 		if not new_auditlog_position:
-			raise InvalidAuditlogEntryUrl("How did we get this URL? It's not valid: {0}".format(url))
+			raise ValueError("How did we get this URL? It's not valid: {0}".format(url))
 		new_auditlog_position = new_auditlog_position.group(1)
 
 		entry = fetch_entry(url)
