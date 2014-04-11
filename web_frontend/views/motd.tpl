@@ -12,8 +12,8 @@
 			<p>Different types of documents have different associated metadata that you can search on. Try it out:</p>
 
 			<ul>
-				<li>Search for tickets that have <a href="javascript:fillInSearchBox('_type:rt email:matt.palmer@anchor.com.au');">been womble'd</a>
-					<pre class="search-example">_type:rt email:matt.palmer@anchor.com.au</pre></li>
+				<li>Search for tickets that have <a href="javascript:fillInSearchBox('rt: email:matt.palmer@anchor.com.au');">been womble'd</a>
+					<pre class="search-example">rt: email:matt.palmer@anchor.com.au</pre></li>
 				<li>Or a particular ticket number, <a href="javascript:fillInSearchBox('rt:376603');">376603</a>
 					<pre class="search-example">rt:376603</pre></li>
 				<li>Perhaps a <a href="javascript:fillInSearchBox('map:SSL');">wiki result for SSL</a>
