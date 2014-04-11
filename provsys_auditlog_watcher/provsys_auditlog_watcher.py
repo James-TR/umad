@@ -43,7 +43,10 @@ AUDITLOGS_URL = 'https://resources.engineroom.anchor.net.au/logs'
 AUDITLOG_ENTRY_URL_RE = re.compile(r'^{0}/(\d+)$'.format(AUDITLOGS_URL))
 UMAD_INDEXER_URL = 'https://umad-indexer.anchor.net.au/'
 
-scratchpad = AuditlogScratchpad()
+redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
+redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
+
+scratchpad = AuditlogScratchpad(host=redis_server_host, port=redis_server_port)
 json_headers = {}
 json_headers['Accept'] = 'application/json'
 pres_key = "provsys_resource_id:{0}".format
