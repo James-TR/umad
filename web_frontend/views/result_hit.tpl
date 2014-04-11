@@ -57,10 +57,11 @@
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}
 						Customer: {{ other_metadata['customer_name'] }} ({{ other_metadata['customer_id'] }})
-						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} ({{ other_metadata['owner_contact']['org_name'] }}) {{ other_metadata['owner_contact']['email'] }}\\
+						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} (Organisation name: {{ other_metadata['owner_contact']['org_name'] }}) 
+						Email: {{ other_metadata['owner_contact']['email'] }}\\
 						<% output = ''
 						if other_metadata.has_key('au_registrant_info'):
-							output += '\n' + "Registrant: {} ({} {}) Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
+							output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
 						end
 						if other_metadata.has_key('nameservers'):
 							output += '\n' + "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
