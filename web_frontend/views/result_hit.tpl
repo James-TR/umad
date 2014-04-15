@@ -17,9 +17,7 @@
 						customer_name = u'↜ {0}'.format(customer_name)
 					end
 					doc_type = other_metadata.get('doc_type')
-					if doc_type:
-						del(other_metadata[doc_type])
-					end
+					other_metadata.pop(doc_type, None) # Kill a field whose name == doc_type, if it exists
 					href = other_metadata.get('functional_url', id)
 					%>
 					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
