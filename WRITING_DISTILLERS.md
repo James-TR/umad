@@ -57,7 +57,9 @@ The interface is super simple:
 Optional keys
 -------------
 
-You may return additional keys in your blob, indeed this is encouraged. Additional keys allow for more nuanced information to be presented to the user, and they are also directly searchable.
+You may return additional keys in your blob, indeed this is encouraged.
+Additional keys allow for more nuanced information to be presented to the user,
+and they are also directly searchable.
 
 * If `title` is present, it will be used when the document is displayed,
   instead of the raw `url`
@@ -110,3 +112,6 @@ by filling in the blanks.
 
       # web_frontend/views/result_hit.tpl
       highlight_classes_to_doctypes['highlight-newtype'] = "newtypes"
+
+7. Once it's all working, add some nice sample URLs to
+   `testing/sample_urls.txt` so that it's possible to test later on.
