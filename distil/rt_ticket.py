@@ -89,7 +89,8 @@ class RtTicketDistiller(Distiller):
 			raise ValueError("This URL doesn't match our idea of an RT URL: %s" % self.url)
 		ticket_number = rt_url_match.group(1)
 
-		self.ticket_url = TICKET_URL_TEMPLATE(ticket_number)
+		self.supplied_ticket_id = ticket_number
+		self.ticket_url         = TICKET_URL_TEMPLATE(ticket_number)
 
 
 	def blobify(self):
@@ -138,16 +139,23 @@ class RtTicketDistiller(Distiller):
 		ticket_lastupdated = ticket['lastupdated']
 		customer_visible   = True if not ticket['private'] else False
 
-		# XXX: Handle deleted and merged tickets now. Use indexer_url here and
-		# call for the ticket's deletion.
-		#  - Deleted tickets: Delete the URL
-		#  - Merged tickets: When deleting we MUST act on distiller.url, not
-		#    ticket_url that we got from the API (that's the ticket it was merged into)
-		#  - What about tickets that have been merged and then deleted? We want to
-		#    delete both distiller.url and ticket_url
+		self.resolved_ticket_id = ticket_number
 
-		# Any residual deleted tickets are hidden from display later on,
-		# but for now we should delete them when we spot them.
+		# Handle deleted and merged tickets by calling our enqueue_deletion method.
+		# self.url   is the "original" URL, before resolution.
+		# ticket_url is the resolved URL, following any merges.
+		#
+		#  - Merged tickets: Delete the original URL if there's a mismatch
+		#  - Deleted tickets: Delete the resolved URL
+		#  - What about tickets that have been merged and then deleted? Handle the
+		#    merge first, then deletion
+
+		# Merged tickets
+		if self.supplied_ticket_id != self.resolved_ticket_id:
+			self.enqueue_deletion()
+			print "Merge detected, {0} into {1}, enqueued for deletion from index: {2}".format(self.supplied_ticket_id, self.resolved_ticket_id, self.url)
+
+		# Deleted tickets (hidden from display later, but delete them now)
 		if ticket_status == 'deleted':
 			# XXX: Is this the correct URL to nuke? For A merged into B,
 			# this will nuke B if it was also deleted. A should have been
