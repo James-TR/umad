@@ -9,4 +9,3 @@ from domain          import DomainDistiller
 
 # This is a demo Distiller
 #from newtype         import NewtypeDistiller
-from generic_http    import GenericHttpDistiller
