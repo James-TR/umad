@@ -13,7 +13,6 @@ distillers = [
 	DomainDistiller ,
 	# This is a demo Distiller
 	#NewtypeDistiller ,
-	GenericHttpDistiller ,
 	]
 
 # A list of hostnames/IPs and ports, passed straight to the ES constructor.
