@@ -135,9 +135,6 @@ li {
   display: inline-block;
   margin-top: 0.5em;
 }
-.doc-type span {
-  padding-left: 0.3em;
-}
 
 .highlight-red           { border-left: 3px solid #FF3333; }
 .highlight-miku          { border-left: 3px solid #3bb0b5; }
