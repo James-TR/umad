@@ -14,7 +14,7 @@
 			<div id="search-toggles">
 			% doc_types_present = sorted(list(doc_types_present))
 			% for doc_type in doc_types_present:
-				<button id="results-toggle-{{ doc_type[1] }}" type="button" data-toggle="button" class="btn btn-default doc-type {{ doc_type[1] }}" title="Show/hide {{ doc_type[0] }}">{{ doc_type[0] }} ✘</button>
+				<button id="results-toggle-{{ doc_type[1] }}" type="button" data-toggle="button" class="btn btn-default doc-type active" title="Show/hide {{ doc_type[0] }}"><span class="{{ doc_type[1] }}">{{ doc_type[0] }}</span></button>
 				<script>$('#results-toggle-{{ doc_type[1] }}').click(function () { $('.result-card.{{ doc_type[1] }}').slideToggle(500, refreshHitcount); });</script>
 			% end
 			</div>
