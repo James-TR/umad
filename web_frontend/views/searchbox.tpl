@@ -1,5 +1,4 @@
 		<div class="jumbotron">
-
 			<form name="q" method="get" action="/" 
 % if searchterm:
 				onSubmit="evilSearchedAgain()"
@@ -13,13 +12,10 @@
 			</div>
 
 			<div id="search-toggles">
-				<div class="btn-toolbar">
-				% doc_types_present = sorted(list(doc_types_present))
-				% for doc_type in doc_types_present:
-					<div class="btn-group">
-						<button type="button" class="btn btn-default doc-type {{ doc_type[1] }}" title="Dismiss all {{ doc_type[0] }}" onClick="javascript:killResultsMatchingClass('{{ doc_type[1] }}');">{{ doc_type[0] }} ✘</button>
-					</div>
-				% end
-				</div>
+			% doc_types_present = sorted(list(doc_types_present))
+			% for doc_type in doc_types_present:
+				<button id="results-toggle-{{ doc_type[1] }}" type="button" data-toggle="button" class="btn btn-default doc-type {{ doc_type[1] }}" title="Show/hide {{ doc_type[0] }}">{{ doc_type[0] }} ✘</button>
+				<script>$('#results-toggle-{{ doc_type[1] }}').click(function () { $('.result-card.{{ doc_type[1] }}').slideToggle(500, refreshHitcount); });</script>
+			% end
 			</div>
 		</div> <!-- END searchbox -->

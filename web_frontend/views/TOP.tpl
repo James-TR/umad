@@ -25,19 +25,6 @@
 			hitcount.text( $(".result-card").length );
 		}
 
-		function killResultsMatchingClass(resultClass) {
-			var cardSelector = ".result-card." + resultClass;
-			$( cardSelector ).fadeOut(1000, function() { $( cardSelector ).remove(); refreshHitcount(); });
-
-			var doctypeSelector = ".doc-type." + resultClass;
-			$( doctypeSelector ).fadeOut(1000, function() { $( doctypeSelector ).remove(); });
-		}
-
-		function killResultsNotMatchingClass(resultClass) {
-			var cardSelector = ".result-card:not(." + resultClass + ")";
-			$( cardSelector ).fadeOut(1000, function() { $( cardSelector ).remove(); refreshHitcount(); });
-		}
-
 		function shareWithSysadmins(url, description) {
 			var roomname = "robots";
 
@@ -163,6 +150,7 @@
 	</script>
 	<script src="/static/js/jquery-1.10.2.min.js"></script>
 	<script src="/static/js/jquery-base64.js"></script>
+	<script src="/static/js/bootstrap-button.js"></script>
 
 </head>
 
