@@ -228,3 +228,8 @@ li {
   border: none;
   padding-left: 0px;
 }
+
+.btn-default.active {
+  border-left: 3px solid #adadad;
+  text-decoration: line-through;
+}
