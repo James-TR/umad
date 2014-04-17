@@ -1,18 +1,13 @@
-[environment "staging"]
-	versioning = ANCHOR-STANDARD-STAGING
-	user = umad
-	host = trick60.syd1.anchor.net.au
-	command = echo \"Not deploying tag %s, we don't have a staging environment lol\"
 [environment "production"]
 	versioning = ANCHOR-STANDARD-PRODUCTION
 	user = umad
 	host = trick60.syd1.anchor.net.au
 	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && sudo /usr/local/bin/allah restart umad_gunicorn && sudo /usr/local/bin/allah restart umad-indexing-listener_gunicorn && sudo /usr/local/bin/allah restart umad-analytics-server && sudo /usr/local/bin/allah restart umad-indexing-worker && sudo /usr/local/bin/allah restart umad-provsys-auditlog-watcher
 
-[environment "umad1"]
+[environment "staging"]
 	versioning = ANCHOR-STANDARD-STAGING
 	user = umad
-	host = umad1.syd1.anchor.net.au
-	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && sudo /usr/local/bin/allah restart umad && echo $(grep -l $(cat .git/HEAD) .git/refs/tags/* | cut -d'/' -f4) > web_frontend/RUNNING_VERSION
+	host = umad1.syd1.anchor.net.au,umad2.syd1.anchor.net.au,umad3.syd1.anchor.net.au
+	command = cd /home/umad/app/ && . /usr/local/share/virtualenvs/umad/bin/activate && pip install -r requirements.txt &&  git fetch --tags && git checkout %s && sudo /usr/local/bin/allah restart umad && echo $(grep -l $(cat .git/HEAD) .git/refs/tags/* | cut -d'/' -f4) > web_frontend/RUNNING_VERSION
 
 # vim: syntax=gitconfig
