@@ -20,3 +20,4 @@ provisioningclient
 colorama
 termcolor
 gunicorn
+certifi
