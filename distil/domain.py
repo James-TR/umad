@@ -15,8 +15,7 @@ class DomainDistiller(Distiller):
 	def will_handle(klass, url):
 		return url.startswith('https://domains.anchor.com.au/')
 
-	@classmethod
-	def query(klass, action, object, attributes):
+	def query(self, action, object, attributes):
 		"""Everything sent to OpenSRS has the following components:
 			action - the name of the action (ie. sw_register, name_suggest, etc)
 			object - the object type to operate on (ie. domain, trust_service)
@@ -26,29 +25,32 @@ class DomainDistiller(Distiller):
 
 		if attributes.has_key('domain') and attributes['domain'].split('.')[-1] == "au":
 			server = 'https://anchor.opensrs.net:55443'
-			username = 'anchorhrs'
-			private_key = '458c081f0dc4188d0b0098b1820cf14429bb6f4b6a3a58e86af689e54729dd5257f60c047960e45304e733961a2a44e19e43a1f098471f87'
+			try:
+				username, private_key = self.auth['openhrs']
+			except:
+				raise RuntimeError("You must provide OpenHRS credentials, please set OPENHRS_AUTH_USER and OPENHRS_AUTH_KEY")
 			# The OpenSRS library doesn't support arbitary server URLs, like our OpenHRS instance, so we hardcode it here.  
 			# There's no test server for OpenHRS, either.
 			opensrs = OpenSRS(username, private_key, server)	
 		else:
-			username = 'anchor'
-			private_key = '1c2de3c188264817832a2d6d71a207dbe48e2cc969aafea9058da06e2e4caebaead24d20533833e1303d776b29df6fcac40a4108d1dc2fa6'
+			try:
+				username, private_key = self.auth['opensrs']
+			except:
+				raise RuntimeError("You must provide OpenSRS credentials, please set OPENSRS_AUTH_USER and OPENSRS_AUTH_KEY")
 			opensrs = OpenSRS(username, private_key, test=False)
 
 		if opensrs:
 			post_data = opensrs.post(action, object, attributes)
 			return post_data
 	
-	@classmethod
-	def get_domain_list(klass):
+	def get_domain_list(self):
 		"""Gets a list of all domains listed in OpenSRS. Does not differenciate between active/expired"""
 		now = datetime.datetime.now()
 		exp_from = "%04d-%02d-%02d" % (now.year-1, now.month, now.day)
 		exp_to = "%04d-%02d-%02d" % (now.year+15, now.month, now.day)
 		domain_list = []
 		for extension in ['.com', '.au']:
-			result = klass.query('get_domains_by_expiredate', 'domain', { 'exp_from' : exp_from, 'exp_to' : exp_to, 'limit' : 100000, 'page' : 1, 'domain': extension})
+			result = self.query('get_domains_by_expiredate', 'domain', { 'exp_from' : exp_from, 'exp_to' : exp_to, 'limit' : 100000, 'page' : 1, 'domain': extension})
 			[ domain_list.append(x['name']) for x in result['attributes']['exp_domains'] ]
 		return domain_list
 

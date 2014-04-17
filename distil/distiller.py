@@ -11,6 +11,10 @@ class Distiller(object):
 			self.auth['mapwiki'] = (os.environ.get('MAPWIKI_USER'), os.environ.get('MAPWIKI_PASS'))
 		if os.environ.get('API_AUTH_USER') and os.environ.get('API_AUTH_PASS'):
 			self.auth['anchor_api'] = (os.environ.get('API_AUTH_USER'), os.environ.get('API_AUTH_PASS'))
+		if os.environ.get('OPENSRS_AUTH_USER') and os.environ.get('OPENSRS_AUTH_KEY'):
+			self.auth['opensrs'] = (os.environ.get('OPENSRS_AUTH_USER'), os.environ.get('OPENSRS_AUTH_KEY'))
+		if os.environ.get('OPENHRS_AUTH_USER') and os.environ.get('OPENHRS_AUTH_KEY'):
+			self.auth['openhrs'] = (os.environ.get('OPENHRS_AUTH_USER'), os.environ.get('OPENHRS_AUTH_KEY'))
 
 		# This is mock data, it's provided as a functional example of
 		# how the Distiller class can fulfil external dependencies for
