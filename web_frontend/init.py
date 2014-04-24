@@ -90,6 +90,10 @@ def server_static(filepath):
 	static_path = os.path.join( os.getcwd(), 'static' )
 	return static_file(filepath, root=static_path)
 
+@route('/heartbeat.py')
+def heartbeat():
+	return "OK"
+
 @route('/')
 @view('mainpage')
 def search():
