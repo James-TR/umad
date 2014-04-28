@@ -86,6 +86,9 @@ class DomainDistiller(Distiller):
 		expiry      = self.parse_date_string(domain['registry_expiredate'])
 		tld_data    = domain['tld_data']
 
+		# OpenSRS is a piece of shit
+		if tld_data == 'None': tld_data = None
+
 		# All domains have an owner, but the other fields vary by TLD.
 		owner_contact = domain['contact_set']['owner']
 		# If not present they get None, which'll be dealt with later.
@@ -138,8 +141,8 @@ class DomainDistiller(Distiller):
 			'nameservers':      nameservers,
 			}
 
-		if tld_data != 'None':
-			for key in tld_data.keys():
+		if tld_data:
+			for key in tld_data:
 				domainblob[key] = tld_data[key]
 
 		# Only add the extra contact fields into the domainblob if they actually exist
