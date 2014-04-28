@@ -57,9 +57,9 @@
 						<% owner_output = ''; nameserver_output = ''
 						if other_metadata.has_key('customer_name'):
 							owner_output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
-
+						end
 						if other_metadata.has_key('au_registrant_info'):
-							owner_output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
+							owner_output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'])
 						end
 						if other_metadata.has_key('nameservers'):
 							nameserver_output += "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
