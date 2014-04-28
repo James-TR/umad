@@ -55,7 +55,7 @@ class DomainDistiller(Distiller):
 		return domain_list
 
 	def get_info(self, domain):
-		"""	From http://opensrs.com/docs/apidomains/get_domain_type_all_info_xml.htm """
+		""" From http://opensrs.com/docs/apidomains/get_domain_type_all_info_xml.htm """
 		info = self.query('get', 'domain', { 'domain': domain, 'type': 'all_info',})
 		return info['attributes']
 
@@ -121,7 +121,7 @@ class DomainDistiller(Distiller):
 			customer_name = None
 
 		blob = " ".join([ name,
-			"{} {} ({}) {}".format(owner_contact['first_name'].encode('utf8'), owner_contact['last_name'].encode('utf8'), owner_contact['org_name'].encode('utf8'), owner_contact['email'].encode('utf8')),
+			u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
 			"Expiry:", expiry.encode('utf8'),
 			"Nameservers:", ", ".join(nameservers)
 			])
