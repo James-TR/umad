@@ -81,7 +81,6 @@ class DomainDistiller(Distiller):
 		# - owner_contact         <dict> of <str>
 		# - au_registrant_info    <dict> of <str>
 
-		customer_id = int(domain['affiliate_id'])
 		created     = self.parse_date_string(domain['registry_createdate'])
 		updated     = self.parse_date_string(domain['registry_updatedate'])
 		expiry      = self.parse_date_string(domain['registry_expiredate'])
@@ -98,23 +97,30 @@ class DomainDistiller(Distiller):
 
 		nameservers = [ x['name'] for x in domain['nameserver_list'] ]
 
-		# Grab the customer name
-		try: api_credentials = self.auth['anchor_api']
-		except: raise RuntimeError("You must provide Anchor API credentials, please set API_AUTH_USER and API_AUTH_PASS")
+		# Create the blob
+		blob = name
 
-		customer_url = 'https://customer.api.anchor.com.au/customers/{}'.format(customer_id)
-		print customer_url
-		customer_response = requests.get(customer_url, auth=api_credentials, verify=True, headers=self.accept_json)
-		try: customer_response.raise_for_status()
-		except: raise RuntimeError("Couldn't get customer {0} from API, HTTP error {1}, probably not allowed to view customer".format(customer_id, customer_response.status_code))
+		if domain['affiliate_id'] != 'None':
+			customer_id = int(domain['affiliate_id'])
 
+			# Grab the customer name
+			try: api_credentials = self.auth['anchor_api']
+			except: raise RuntimeError("You must provide Anchor API credentials, please set API_AUTH_USER and API_AUTH_PASS")
 
-		customer = customer_response.json()
-		customer_name = customer['description']
+			customer_url = 'https://customer.api.anchor.com.au/customers/{}'.format(customer_id)
+			customer_response = requests.get(customer_url, auth=api_credentials, verify=True, headers=self.accept_json)
+			# XXX: Do we really want to die here?
+			try: customer_response.raise_for_status()
+			except: raise RuntimeError("Couldn't get customer {0} from API, HTTP error {1}, probably not allowed to view customer".format(customer_id, customer_response.status_code))
+
+			customer = customer_response.json()
+			customer_name = customer['description']
+			blob += ' '.join([customer_name, str(customer_id)])
+		else:
+			customer_id = None
+			customer_name = None
 
 		blob = " ".join([ name, 
-			customer_name,
-			str(customer_id),
 			"{} {} ({}) {}".format(owner_contact['first_name'].encode('utf8'), owner_contact['last_name'].encode('utf8'), owner_contact['org_name'].encode('utf8'), owner_contact['email'].encode('utf8')),
 			"Expiry:", expiry.encode('utf8'),
 			"Nameservers:", ", ".join(nameservers)
@@ -125,7 +131,7 @@ class DomainDistiller(Distiller):
 			'customer_name':    customer_name,
 			'blob':             blob,
 			'url':              url,
-			'local_id':         customer_id,
+			'local_id':         name,
 			'customer_id':      customer_id,
 			'created':          created,
 			'updated':          updated,
