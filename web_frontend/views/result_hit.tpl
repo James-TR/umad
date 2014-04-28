@@ -53,20 +53,22 @@
 						<a href={{ new_ticket_link }} target="_blank" >Create a ticket</a>
 					</span><br />
 				% elif doc_type == 'domain':
-					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}
-						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} (Organisation name: {{ other_metadata['owner_contact']['org_name'] }}) 
-						Email: {{ other_metadata['owner_contact']['email'] }}\\
-						<% output = ''
-						if other_metadata['customer_name'] is not None:
-							output += '\n' + "Customer: {} ({})".format(other_metadata['customer_name'], other_metadata['customer_id'])
+					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
+						<% owner_output = ''; nameserver_output = ''
+						if other_metadata.has_key('customer_name'):
+							owner_output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
+
 						if other_metadata.has_key('au_registrant_info'):
-							output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
+							owner_output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
 						end
 						if other_metadata.has_key('nameservers'):
-							output += '\n' + "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
+							nameserver_output += "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
 						end
 						%>
-						{{ output.encode('utf8') }}
+						{{ owner_output.encode('utf8') }}
+						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} (Organisation name: {{ other_metadata['owner_contact']['org_name'] }}) 
+						Email: {{ other_metadata['owner_contact']['email'] }}
+						{{ nameserver_output.encode('utf8') }}
 					</span>
 				% else:
 					<span class="excerpt">{{! extract.encode('utf8') }}</span><br />

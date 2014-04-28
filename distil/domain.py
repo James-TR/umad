@@ -99,7 +99,11 @@ class DomainDistiller(Distiller):
 		nameservers = [ x['name'] for x in domain['nameserver_list'] ]
 
 		# Create the blob
-		blob = name
+		blob = " ".join([ name,
+		u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
+		"Expiry:", expiry.encode('utf8'),
+		"Nameservers:", ", ".join(nameservers)
+		])
 
 		if domain['affiliate_id'] != 'None':
 			customer_id = int(domain['affiliate_id'])
@@ -120,12 +124,6 @@ class DomainDistiller(Distiller):
 		else:
 			customer_id = None
 			customer_name = None
-
-		blob += " ".join([ 
-			u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
-			"Expiry:", expiry.encode('utf8'),
-			"Nameservers:", ", ".join(nameservers)
-			])
 
 		domainblob = {
 			'name':             name,
