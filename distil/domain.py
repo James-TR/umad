@@ -116,7 +116,7 @@ class DomainDistiller(Distiller):
 
 			customer = customer_response.json()
 			customer_name = customer['description']
-			blob += (' {} {} ').format(customer_name, str(customer_id))
+			blob += (' {} {} ').format(customer_name, customer_id)
 		else:
 			customer_id = None
 			customer_name = None
