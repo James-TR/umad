@@ -23,7 +23,7 @@ class DomainDistiller(Distiller):
 			extra_items - any extra top level items (ie. registrant_ip)
 		"""
 
-		if attributes.has_key('domain') and attributes['domain'].split('.')[-1] == "au":
+		if attributes.has_key('domain') and attributes['domain'].endswith("au"):
 			server = 'https://anchor.opensrs.net:55443'
 			try:
 				username, private_key = self.auth['openhrs']
