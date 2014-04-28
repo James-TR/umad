@@ -29,9 +29,9 @@ class DomainDistiller(Distiller):
 				username, private_key = self.auth['openhrs']
 			except:
 				raise RuntimeError("You must provide OpenHRS credentials, please set OPENHRS_AUTH_USER and OPENHRS_AUTH_KEY")
-			# The OpenSRS library doesn't support arbitary server URLs, like our OpenHRS instance, so we hardcode it here.  
+			# The OpenSRS library doesn't support arbitary server URLs, like our OpenHRS instance, so we hardcode it here.
 			# There's no test server for OpenHRS, either.
-			opensrs = OpenSRS(username, private_key, server)	
+			opensrs = OpenSRS(username, private_key, server)
 		else:
 			try:
 				username, private_key = self.auth['opensrs']
@@ -42,7 +42,7 @@ class DomainDistiller(Distiller):
 		if opensrs:
 			post_data = opensrs.post(action, object, attributes)
 			return post_data
-	
+
 	def get_domain_list(self):
 		"""Gets a list of all domains listed in OpenSRS. Does not differenciate between active/expired"""
 		now = datetime.datetime.now()
@@ -88,7 +88,7 @@ class DomainDistiller(Distiller):
 
 		# All domains have an owner, but the other fields vary by the TLD
 		owner_contact = domain['contact_set']['owner']
-		try: 
+		try:
 			tech_contact = domain['contact_set']['tech']
 			admin_contact = domain['contact_set']['admin']
 			billing_contact = domain['contact_set']['billing']
@@ -120,7 +120,7 @@ class DomainDistiller(Distiller):
 			customer_id = None
 			customer_name = None
 
-		blob = " ".join([ name, 
+		blob = " ".join([ name,
 			"{} {} ({}) {}".format(owner_contact['first_name'].encode('utf8'), owner_contact['last_name'].encode('utf8'), owner_contact['org_name'].encode('utf8'), owner_contact['email'].encode('utf8')),
 			"Expiry:", expiry.encode('utf8'),
 			"Nameservers:", ", ".join(nameservers)
