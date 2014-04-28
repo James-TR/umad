@@ -146,11 +146,8 @@ class DomainDistiller(Distiller):
 				domainblob[key] = tld_data[key]
 
 		# Only add the extra contact fields into the domainblob if they actually exist
-		if tech_contact:
-			domainblob['tech_contact']    = tech_contact
-		if admin_contact:
-			domainblob['admin_contact']   = admin_contact
-		if billing_contact:
-			domainblob['billing_contact'] = billing_contact
+		if tech_contact:    domainblob['tech_contact']    = tech_contact
+		if admin_contact:   domainblob['admin_contact']   = admin_contact
+		if billing_contact: domainblob['billing_contact'] = billing_contact
 
 		yield domainblob
