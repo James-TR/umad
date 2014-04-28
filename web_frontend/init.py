@@ -90,9 +90,113 @@ def server_static(filepath):
 	static_path = os.path.join( os.getcwd(), 'static' )
 	return static_file(filepath, root=static_path)
 
-@route('/heartbeat.py')
+@route('/heartbeat')
 def heartbeat():
-	return "OK"
+	response.content_type = 'text/plain; charset=UTF-8'
+
+	search_term = '*'
+	count = MAX_HITS
+
+	VERSION_STRING = 'no version string found'
+	if os.path.exists('RUNNING_VERSION'):
+		with open('RUNNING_VERSION', 'r') as f:
+			VERSION_STRING = f.readline().strip()
+
+	template_dict = {}
+	template_dict['searchterm'] = search_term
+	template_dict['hits'] = []
+	template_dict['hit_limit'] = 0
+	template_dict['valid_search_query'] = True
+	template_dict['doc_types_present'] = set()
+	template_dict['version_string'] = VERSION_STRING
+
+	results = search_index(search_term, max_hits=count)
+	result_docs = results['hits']
+	template_dict['hit_limit'] = results['hit_limit']
+
+	# Clean cruft
+	result_docs = [ x for x in result_docs if not x['id'].startswith('https://ticket.api.anchor.com.au/') ]
+	result_docs = [ x for x in result_docs if not x['id'].startswith('provsys://') ]
+
+	# Sort
+	result_docs.sort(key=itemgetter('score'), reverse=True)
+	for doc in result_docs:
+		if doc['type'] == 'rt' and doc['other_metadata'].get('status') == 'deleted': continue
+
+		hit = {}
+		hit['id'] = doc['id']
+		hit['score'] = "{0:.2f}".format(doc['score'])
+
+		if doc['highlight'].get('excerpt'):
+			hit['extract'] = doc['highlight'].get('excerpt')[0]
+		elif doc['highlight'].get('blob'):
+			hit['extract'] = doc['highlight'].get('blob')[0]
+		else:
+			hit['extract'] = cgi.escape(doc['blob'][:200])
+
+		if 'last_updated' in doc['other_metadata']:
+			pretty_last_updated = parse(doc['other_metadata']['last_updated']).astimezone(tzlocal()).strftime('%Y-%m-%d %H:%M')
+			doc['other_metadata']['last_updated_sydney'] = pretty_last_updated
+
+		hit['highlight_class'] = highlight_document_source(doc['id'])[1]
+		if hit['highlight_class']:
+			template_dict['doc_types_present'].add(highlight_document_source(doc['id']))
+
+		hit['other_metadata'] = doc['other_metadata']
+		hit['other_metadata'] = dict((k,v) for k,v in hit['other_metadata'].iteritems() if v is not None)
+
+		template_dict['hits'].append(hit)
+
+	rendered_html = template('mainpage', template_dict).encode('utf8')
+
+
+	# Perform analysis, comrade!
+	output = []
+
+
+	# Each source should have at least one document in them.
+	# When searching for everything, check that we have buttons for every source
+	num_sources = len(KNOWN_DOC_TYPES)
+	num_source_buttons = rendered_html.count('btn btn-default doc-type')
+
+	if num_sources != num_source_buttons:
+		output.append( "✘ Some buttons are missing!  The buttons that should be shown are: {}".format(', '.join(KNOWN_DOC_TYPES)) )
+	else:
+		output.append( "✔ Correct number of buttons shown for {} document sources".format(num_sources) )
+
+
+	# Each source should have a minimum of MAX_HITS results returned.
+	# Check that we get at least that many results.
+	expected_results = num_sources * count
+	min_results      = num_sources
+
+	match = re.search(r'Display limited to <strong><span id="hitcount">(\d+)</span> results', rendered_html)
+	if match: num_results = int(match.group(1))
+	else:     num_results = 0
+
+	if not match: output.append( "✘ Failure while parsing page, couldn't find 'Display limited to etc...' in the source" )
+	else:         output.append( "✔ A number of results is being reported" )
+
+	if num_results < min_results: output.append( "✘ Reporting {} results, not even one for each doctype, something is wrong".format(num_results) )
+	else:                         output.append( "✔ Reporting {} results, that's at least one for each doctype ({})".format(num_results, min_results) )
+
+	if num_results < expected_results: output.append( "✘ Not enough results. Expected at least {}, but only {} reported".format(expected_results, num_results) )
+	else:                              output.append( "✔ Reported number of results ({}) matches expectations".format(expected_results) )
+
+	# Check if we got the expected number of results shown on the page
+	# XXX: Does this work for domains?
+	counted_hits = rendered_html.count('div class="hitlink"')
+	if counted_hits != num_results: output.append( "✘ Reported {} results but only counted {} result cards".format(num_results, counted_hits) )
+	else:                           output.append( "✔ Reported result count of {} appears to be correct".format(num_results) )
+
+	if all( [ x.startswith("✔") for x in output ] ):
+		return "OK"
+
+	failure_lines = [ x for x in output if not x.startswith("✔") ]
+	first_failure = [ str(x) for x in failure_lines[:1] ]
+	return "WOW SUCH FAIL VERY SAD: {}".format( ''.join(first_failure) ).replace('OK','**')
+
+
 
 @route('/')
 @view('mainpage')
