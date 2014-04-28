@@ -58,7 +58,7 @@
 						Email: {{ other_metadata['owner_contact']['email'] }}\\
 						<% output = ''
 						if other_metadata['customer_name'] is not None:
-							output += '\n' + Customer: {{ other_metadata['customer_name'] }} ({{ other_metadata['customer_id'] }})
+							output += '\n' + "Customer: {} ({})".format(other_metadata['customer_name'], other_metadata['customer_id'])
 						if other_metadata.has_key('au_registrant_info'):
 							output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'], )
 						end
