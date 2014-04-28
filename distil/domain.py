@@ -86,14 +86,12 @@ class DomainDistiller(Distiller):
 		expiry      = self.parse_date_string(domain['registry_expiredate'])
 		tld_data    = domain['tld_data']
 
-		# All domains have an owner, but the other fields vary by the TLD
+		# All domains have an owner, but the other fields vary by TLD.
 		owner_contact = domain['contact_set']['owner']
-		try:
-			tech_contact = domain['contact_set']['tech']
-			admin_contact = domain['contact_set']['admin']
-			billing_contact = domain['contact_set']['billing']
-		except KeyError:
-			pass
+		# If not present they get None, which'll be dealt with later.
+		tech_contact    = domain['contact_set'].get('tech')
+		admin_contact   = domain['contact_set'].get('admin')
+		billing_contact = domain['contact_set'].get('billing')
 
 		nameservers = [ x['name'] for x in domain['nameserver_list'] ]
 
@@ -145,11 +143,11 @@ class DomainDistiller(Distiller):
 				domainblob[key] = tld_data[key]
 
 		# Only add the extra contact fields into the domainblob if they actually exist
-		try:
-			domainblob['billing_contact'] = billing_contact
-			domainblob['admin_contact']   = admin_contact
+		if tech_contact:
 			domainblob['tech_contact']    = tech_contact
-		except NameError:
-			pass
+		if admin_contact:
+			domainblob['admin_contact']   = admin_contact
+		if billing_contact:
+			domainblob['billing_contact'] = billing_contact
 
 		yield domainblob
