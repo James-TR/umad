@@ -116,12 +116,12 @@ class DomainDistiller(Distiller):
 
 			customer = customer_response.json()
 			customer_name = customer['description']
-			blob += ' '.join([customer_name, str(customer_id)])
+			blob += (' {} {} ').format(customer_name, str(customer_id))
 		else:
 			customer_id = None
 			customer_name = None
 
-		blob = " ".join([ name,
+		blob += " ".join([ 
 			u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
 			"Expiry:", expiry.encode('utf8'),
 			"Nameservers:", ", ".join(nameservers)
