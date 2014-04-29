@@ -6,6 +6,18 @@ import elasticsearch
 from localconfig import *
 
 
+# XXX: This mechanism does not define ordering of distiller classes in the
+# list. Might this be a problem when it comes to iterating the distillers and
+# calling will_handle()?
+
+# XXX: Is the ordering in distil/__init__.py honoured for our purposes? No, it
+# appears to be alpha-ordered when iterated.
+
+import inspect
+import distil
+distillers = [ x[1] for x in inspect.getmembers(distil, inspect.isclass) ]
+
+
 KNOWN_DOC_TYPES = { d.doc_type for d in distillers }
 
 
