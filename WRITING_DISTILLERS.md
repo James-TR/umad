@@ -9,28 +9,11 @@ UMAD inspects the URL of the document (according to rules that you specify) to
 derive the `doc_type`, which is a short string identifying the human source of
 the document.
 
-As part of a current hack to make searching faster/easier, documents will be
-indexed with a field whose name matches the `doc_type`. For example, RT support
-tickets have a `doc_type` of "rt", which will allow you to intuitively search
-for RT support tickets like so:
+You can search for a particular doc_type using doc_type: query.  For example, 
+RT support tickets have a `doc_type` of "rt", which will allow you to 
+intuitively search for RT support tickets like so:
 
     rt:emergency
-
-This essentially makes the short `doc_type` a surrogate for specifying
-`_type:rt` in your search. This field is mapped to the document's blob, so
-everything should Just Work as expected.
-
-
-Determining doc_type
---------------------
-
-Your localconfig.py must provide...
-
-* A list, `distillers`, of Distiller subclasses.
-* A list, `ELASTICSEARCH_NODES`, of ES nodes to connect to, eg.: `[ "10.0.0.1:9200" ]`
-
-TBC
-
 
 Interface
 =========
@@ -93,12 +76,7 @@ by filling in the blanks.
 
       from newtype import NewtypeDistiller
 
-5. Add your new Distiller class to `localconfig.py`, eg.:
-
-      # ... in distillers = []
-      NewtypeDistiller ,
-
-6. Optionally style the class up for display, this is highily recommended.
+5. Optionally style the class up for display, this is highly recommended.
    Select a colour and add the necessary code.
 
       # web_frontend/static/style/umad.css
@@ -113,5 +91,5 @@ by filling in the blanks.
       # web_frontend/views/result_hit.tpl
       highlight_classes_to_doctypes['highlight-newtype'] = "newtypes"
 
-7. Once it's all working, add some nice sample URLs to
+6. Once it's all working, add some nice sample URLs to
    `testing/sample_urls.txt` so that it's possible to test later on.
