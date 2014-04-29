@@ -17,6 +17,10 @@ import inspect
 import distil
 distillers = [ x[1] for x in inspect.getmembers(distil, inspect.isclass) ]
 
+# XXX: In case this isn't sufficiently discriminating, say if someone drags
+# more classes into the distil module for some reason, this should thin things
+# out suitably:
+# filtered_distillers = [ x for x in ds if x.__bases__[0] is distil.distiller.Distiller ]
 
 KNOWN_DOC_TYPES = { d.doc_type for d in distillers }
 
