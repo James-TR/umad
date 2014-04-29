@@ -6,6 +6,34 @@ import elasticsearch
 from localconfig import *
 
 
+KNOWN_DOC_TYPES = { d.doc_type for d in distillers }
+
+
+# A list of hostnames/IPs and ports, passed straight to the ES constructor.
+ELASTICSEARCH_NODES = [ "umad1.syd1.anchor.net.au:9200", "umad2.syd1.anchor.net.au:9200", "umad3.syd1.anchor.net.au:9200" ]
+
+
+
+def get_distiller(url):
+	'''Return a distiller that's suitable for the URL provided'''
+
+	for distiller in distillers:
+		if distiller.will_handle(url):
+			return distiller(url)
+
+	raise LookupError("We don't have a module that can handle that URL: {0}".format(url))
+
+
+def determine_doc_type(url):
+	"""We return None if no matches are found, caller to deal with it"""
+	for distiller in distillers:
+		if distiller.will_handle(url):
+			return distiller.doc_type
+
+
+
+
+
 es = elasticsearch.Elasticsearch(ELASTICSEARCH_NODES)
 indices = elasticsearch.client.IndicesClient(es)
 
@@ -13,7 +41,11 @@ class InvalidDocument(Exception): pass
 
 def add_to_index(document):
 	key = document['url']
+
 	doc_type = determine_doc_type(key)
+	if doc_type is None:
+		raise LookupError("We don't have a module that can handle that URL: {0}".format(url))
+
 	index_name = "umad_%s" % doc_type
 
 	# Sanity check the document. Our minimal requirement for the document
