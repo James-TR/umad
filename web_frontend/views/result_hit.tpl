@@ -12,6 +12,7 @@
 					linktext = other_metadata.get('title', linktext)
 					if linktext:
 						linktext = linktext[0].upper() + linktext[1:]
+					end
 					customer_name = other_metadata.get('customer_name', u'')
 					if customer_name:
 						customer_name = u'↜ {0}'.format(customer_name)
