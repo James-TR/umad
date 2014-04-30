@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/home/umad/virtualenvs/umad/bin/python
+# XXX: Pull the location of the virtualenv from the environment
 
 # WHERE IT RUNS
 #
