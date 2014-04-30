@@ -8,18 +8,23 @@
 				<li class="result-card {{ highlight_class.encode('utf8') }}">
 				<div class="hitlink">
 					<%
-					linktext = other_metadata.get('name', id)
-					linktext = other_metadata.get('title', linktext)
-					if linktext:
-						linktext = linktext[0].upper() + linktext[1:]
-					end
-					customer_name = other_metadata.get('customer_name', u'')
-					if customer_name:
-						customer_name = u'↜ {0}'.format(customer_name)
-					end
-					doc_type = other_metadata.get('doc_type')
-					other_metadata.pop(doc_type, None) # Kill a field whose name == doc_type, if it exists
-					href = other_metadata.get('functional_url', id)
+						doc_type = other_metadata.get('doc_type')
+						# Kill a field whose name=doc_type if
+						# it exists; no need to print it later.
+						other_metadata.pop(doc_type, None)
+
+						linktext = other_metadata.get('name', id)
+						linktext = other_metadata.get('title', linktext)
+						if linktext:
+							linktext = linktext[0].upper() + linktext[1:]
+						end
+
+						customer_name = other_metadata.get('customer_name', u'')
+						if customer_name:
+							customer_name = u'↜ {0}'.format(customer_name)
+						end
+
+						href = other_metadata.get('functional_url', id)
 					%>
 					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
 					<!-- OPTIONAL FOR NOW
