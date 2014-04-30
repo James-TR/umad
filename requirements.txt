@@ -21,3 +21,4 @@ colorama
 termcolor
 gunicorn
 certifi
+nagioscheck
