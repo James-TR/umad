@@ -49,7 +49,8 @@ class DomainDistiller(Distiller):
 		exp_from = "%04d-%02d-%02d" % (now.year-1, now.month, now.day)
 		exp_to = "%04d-%02d-%02d" % (now.year+15, now.month, now.day)
 		domain_list = []
-		for extension in ['.com', '.au']:
+		# Our connection to OpenHRS is currently broken.  Disable the .au syncing for now
+		for extension in ['.com']: #, '.au']:
 			result = self.query('get_domains_by_expiredate', 'domain', { 'exp_from' : exp_from, 'exp_to' : exp_to, 'limit' : 100000, 'page' : 1, 'domain': extension})
 			[ domain_list.append(x['name']) for x in result['attributes']['exp_domains'] ]
 		return domain_list
