@@ -16,7 +16,10 @@
 						linktext = other_metadata.get('name', id)
 						linktext = other_metadata.get('title', linktext)
 						if linktext:
-							linktext = linktext[0].upper() + linktext[1:]
+							if doc_type != 'domain':
+								# Domain names look stupid when capitalised.
+								linktext = linktext[0].upper() + linktext[1:]
+							end
 						end
 
 						customer_name = other_metadata.get('customer_name', u'')
