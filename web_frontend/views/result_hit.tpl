@@ -56,10 +56,12 @@
 						if other_metadata.has_key('technical_contact'):
 							output += '\n' + other_metadata['technical_contact']
 						end
-						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value=' + str(other_metadata['customer_id'])
+						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value={customer_id}'.format(**other_metadata)
+						customer_tickets_link = 'https://rt.engineroom.anchor.net.au/Search/Results.html?Order=DESC&OrderBy=LastUpdated&Query=%27CF.{{Related%20Customer}}%27%3D{customer_id}'.format(**other_metadata)
 						%>
 						{{ output.encode('utf8') }}
-						<a href={{ new_ticket_link }} target="_blank" >Create a ticket</a>
+						<a href="{{ new_ticket_link }}" target="_blank" ><span class="glyphicon glyphicon-plus"></span> Create a ticket</a>
+						<a href="{{ customer_tickets_link }}"><span class="glyphicon glyphicon-list"></span> Show customer's tickets</a>
 					</span><br />
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
