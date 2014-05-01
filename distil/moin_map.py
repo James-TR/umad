@@ -75,7 +75,6 @@ class MoinMapDistiller(Distiller):
 		#  - Table tags (||)
 		page_lines = [ line for line in page_lines if  all( [ not line.startswith(x) for x in ['#', '||'] ] )  ]
 
-
 		# Try to find a suitable title
 		lines_starting_with_title_macro = [ line for line in page_lines[:3] if line.startswith('<<Title') ]
 		lines_starting_with_equals_sign = [ line for line in page_lines[:3] if line.startswith('=') ]
@@ -99,13 +98,20 @@ class MoinMapDistiller(Distiller):
 
 
 		# Strip all lines that are just macros
+		# XXX: This macros stripping needs a rethink
 		page_lines = [ line for line in page_lines if not NON_TITLE_MACRO_RE.match(line) ]
 
+		# Drop the <<Title>> macros out of the output
+		page_lines = [ line for line in page_lines if not TITLE_RE.match(line) ]
+
 		# Content is now considered tidy
-		blob = '\n'.join(page_lines)
+		blob = '\n'.join([title] + page_lines)
 
 		# Try and find an exciting excerpt, this is complete and utter guesswork
-		excerpt = '\n'.join(page_lines[:10])
+		if page_lines:
+			excerpt = '\n'.join(page_lines[:10])
+		else:
+			excerpt = "Unable to generate excerpt"
 
 		# Allow for title keyword searching
 		map_rough_title_chunks  = set(page_name.split('/'))
