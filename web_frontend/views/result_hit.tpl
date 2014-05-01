@@ -47,14 +47,14 @@
 				% if doc_type == 'customer':
 					<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
 						<% output = ''
-						if other_metadata.has_key('primary_contact'):
-							output += '\n' + other_metadata['primary_contact']
+						if other_metadata.has_key('primary_contacts'):
+							output += '\n' + other_metadata['primary_contacts']
 						end
-						if other_metadata.has_key('billing_contact'):
-							output += '\n' + other_metadata['billing_contact']
+						if other_metadata.has_key('billing_contacts'):
+							output += '\n' + other_metadata['billing_contacts']
 						end
-						if other_metadata.has_key('technical_contact'):
-							output += '\n' + other_metadata['technical_contact']
+						if other_metadata.has_key('technical_contacts'):
+							output += '\n' + other_metadata['technical_contacts']
 						end
 						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value={customer_id}'.format(**other_metadata)
 						customer_tickets_link = 'https://rt.engineroom.anchor.net.au/Search/Results.html?Order=DESC&OrderBy=LastUpdated&Query=%27CF.{{Related%20Customer}}%27%3D{customer_id}'.format(**other_metadata)
