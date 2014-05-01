@@ -22,6 +22,8 @@ def debug(msg, force_debug=False):
 		sys.stderr.write(str(msg) + '\n')
 		sys.stderr.flush()
 
+UMAD_INDEXER_URL = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer.anchor.net.au/')
+
 
 def highlight_document_source(url):
 	# Valid values are kept in umad.css
@@ -109,6 +111,7 @@ def heartbeat():
 	template_dict['valid_search_query'] = True
 	template_dict['doc_types_present'] = set()
 	template_dict['version_string'] = VERSION_STRING
+	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
 
 	results = search_index(search_term, max_hits=count)
 	result_docs = results['hits']
@@ -224,7 +227,8 @@ def search():
 	template_dict['valid_search_query'] = True
 	template_dict['doc_types_present'] = set()
 
-	template_dict['version_string'] = VERSION_STRING
+	template_dict['version_string']   = VERSION_STRING
+	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
 
 
 	if q:

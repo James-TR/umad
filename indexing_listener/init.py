@@ -8,9 +8,6 @@ import redis
 from bottle import route, request, run, default_app, abort
 
 
-teh_redis = redis.StrictRedis(host='localhost', port=6379, db=0)
-
-
 # XXX: maybe these should be to stdout instead of stderr, I dunno
 def debug(msg, force_debug=False):
 	if DEBUG or force_debug:
@@ -22,6 +19,11 @@ def debug(msg, force_debug=False):
 DEBUG = os.environ.get('UMAD_INDEXING_LISTENER_DEBUG')
 PID_PREFIX = '[pid {0}] '.format(os.getpid())
 debug("Debug logging is enabled")
+
+
+redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
+redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
+teh_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=0)
 
 
 
