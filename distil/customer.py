@@ -78,7 +78,7 @@ class CustomerDistiller(Distiller):
 			contact_response = requests.get(contact_url, auth=api_credentials, verify=True, headers=self.accept_json)
 
 			try: contact_response.raise_for_status()
-			except: raise RuntimeError("Couldn't get customer from API, HTTP error {0}, probably not allowed to view customer".format(contact_response.status_code))
+			except: raise RuntimeError("Couldn't get contact from customer API, HTTP error {0}, probably not allowed to view customer".format(contact_response.status_code))
 
 			contact = clean_contact(contact_response.json())
 			yield contact
