@@ -44,11 +44,11 @@ def highlight_document_source(url):
 	if url.startswith('https://resources.engineroom.anchor.net.au/'):
 		return ('Provsys',  'highlight-portal-blue')
 	if url.startswith('https://docs.anchor.net.au/'):
-		return ('Docs',   'highlight-portal-orange')
+		return ('Docs',   'highlight-orange')
 	if url.startswith('https://customer.api.anchor.com.au/customers/'):
 		return ('Customer', 'highlight-pink')
 	if url.startswith('https://domains.anchor.com.au/'):
-		return ('Domain', 'highlight-orange')
+		return ('Domain', 'highlight-portal-orange')
 
 	return ('DEFAULT', '')
 
