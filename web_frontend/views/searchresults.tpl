@@ -29,7 +29,7 @@
 				</div>
 				<ul id="hits">
 				% for hit in hits:
-					% include('result_hit.tpl', highlight_class=hit['highlight_class'], id=hit['id'], extract=hit['extract'], other_metadata=hit['other_metadata'], score=hit['score'])
+					% include('result_hit.tpl', highlight_class=hit['highlight_class'], id=hit['id'], extract=hit['extract'], other_metadata=hit['other_metadata'], score=hit['score'], umad_indexer_url=umad_indexer_url)
 				% end
 				</ul>
 			% else:

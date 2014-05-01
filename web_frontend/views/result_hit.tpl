@@ -91,7 +91,7 @@
 
 				<div class="reindex-button">
 					% umad_indexer_query_string = urlencode({'url':id.encode('utf8')})
-					<a href="https://umad-indexer.anchor.net.au/?{{! umad_indexer_query_string }}" target="_blank" onClick="evilUserReindex({{ json.dumps(hit) }})"><span class="glyphicon glyphicon-refresh" title="Reindex this result"></span></a>
+					<a href="{{ umad_indexer_url }}?{{! umad_indexer_query_string }}" target="_blank" onClick="evilUserReindex({{ json.dumps(hit) }})"><span class="glyphicon glyphicon-refresh" title="Reindex this result"></span></a>
 				</div>
 
 				<div class="metadata-button">
