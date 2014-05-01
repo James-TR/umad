@@ -28,11 +28,11 @@ debug("Debug logging is enabled")
 @route('/', method=['GET','DELETE'])
 def index():
 	url = request.query.url or ''
-	debug(u"URL to index: %s" % url)
 
 	if not url:
 		human_method = { 'GET':"index", 'DELETE':"delete" }.get(request.method, 'something-something-action')
 		abort(400, "Y U DO DIS? I can't {0} something unless you give me 'url' as a query parameter".format(human_method))
+	debug(u"URL to index: %s" % url)
 
 	human_action = { 'GET':"indexing", 'DELETE':"deletion" }.get(request.method, 'something-something-action')
 
