@@ -24,7 +24,7 @@ class DomainDistiller(Distiller):
 		"""
 
 		if attributes.get('domain', '').endswith(".au"):
-			server = 'https://anchor.opensrs.net:55443'
+			server = 'https://domains.anchor.com.au:55443'
 			try:
 				username, private_key = self.auth['openhrs']
 			except:
