@@ -1,3 +1,4 @@
+import re
 from dateutil.parser import *
 from dateutil.tz import *
 import requests
@@ -91,6 +92,12 @@ class CustomerDistiller(Distiller):
 		try: api_credentials = self.auth['anchor_api']
 		except: raise RuntimeError("You must provide Anchor API credentials, please set API_AUTH_USER and API_AUTH_PASS")
 
+		# Validate the URL format and extract the intended customer ID
+		customer_url_match = re.match(r'https://customer\.api\.anchor\.com\.au/customers/(\d+)$', url)
+		if customer_url_match is None:
+			raise ValueError("This URL doesn't match our idea of a customer URL: {0}".format(url))
+		supplied_customer_id = customer_url_match.group(1)
+
 		customer_response = requests.get(url, auth=api_credentials, verify=True, headers=self.accept_json)
 		try: customer_response.raise_for_status()
 		except: raise RuntimeError("Couldn't get customer from API, HTTP error {0}, probably not allowed to view customer".format(customer_response.status_code))
@@ -113,6 +120,15 @@ class CustomerDistiller(Distiller):
 		primary_contacts     = self.get_contacts(customer['primary_contact_url_list'])
 		billing_contacts     = self.get_contacts(customer['billing_contact_url_list'])
 		alternative_contacts = self.get_contacts(customer['alternative_contact_url_list'])
+
+		# Handle merged customers by calling our enqueue_deletion method.
+		# supplied_customer_id is what we were given in the URL.
+		# customer_id is       is what the customer API gave us, which may be different.
+		#
+		# Merged customers will have a different customer_id after the API redirects us.
+		if customer_id != supplied_customer_id:
+			self.enqueue_deletion()
+			print "Customer merge detected, {0} into {1}, enqueued for deletion from index: {2}".format(supplied_customer_id, customer_id, self.url)
 
 		# Put together our response. We have:
 		# - customer_id           <int>
