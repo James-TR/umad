@@ -108,10 +108,9 @@ class MoinMapDistiller(Distiller):
 		blob = '\n'.join([title] + page_lines)
 
 		# Try and find an exciting excerpt, this is complete and utter guesswork
+		excerpt = None
 		if page_lines:
 			excerpt = '\n'.join(page_lines[:10])
-		else:
-			excerpt = "Unable to generate excerpt"
 
 		# Allow for title keyword searching
 		map_rough_title_chunks  = set(page_name.split('/'))
@@ -123,6 +122,7 @@ class MoinMapDistiller(Distiller):
 		document['blob'] = blob
 		document['local_id'] = ' '.join(map_rough_title_chunks)
 		document['title']    = title
-		document['excerpt']  = excerpt
+		if excerpt:
+			document['excerpt']  = excerpt
 
 		yield document
