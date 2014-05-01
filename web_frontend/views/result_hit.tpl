@@ -16,7 +16,7 @@
 						linktext = other_metadata.get('name', id)
 						linktext = other_metadata.get('title', linktext)
 						if linktext:
-							if doc_type != 'domain':
+							if doc_type not in ['domain']:
 								# Domain names look stupid when capitalised.
 								linktext = linktext[0].upper() + linktext[1:]
 							end
@@ -65,21 +65,25 @@
 					</span><br />
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
-						<% owner_output = ''; nameserver_output = ''
+						<% output = ''
 						if other_metadata.has_key('customer_name'):
-							owner_output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
+							output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
 						end
 						if other_metadata.has_key('au_registrant_info'):
-							owner_output += '\n' + "Registrant: {} ({} {})\n Type: {}".format(other_metadata['au_registrant_info']['registrant_name'], other_metadata['au_registrant_info']['registrant_id'], other_metadata['au_registrant_info']['registrant_id_type'], other_metadata['au_registrant_info']['eligibility_type'])
+							output += '\n' + "Registrant: {registrant_name} ({registrant_id_type}: {registrant_id})".format(**other_metadata['au_registrant_info'])
+							output += '\n' + "{first_name} {last_name} {email}".format(**other_metadata['owner_contact'])
+						else:
+							if other_metadata['owner_contact']['org_name'] == u"{first_name} {last_name}".format(**other_metadata['owner_contact']):
+								output += '\n' + "{first_name} {last_name} {email}".format(**other_metadata['owner_contact'])
+							else:
+								output += '\n' + "{first_name} {last_name} ({org_name}) {email}".format(**other_metadata['owner_contact'])
+							end
 						end
 						if other_metadata.has_key('nameservers'):
-							nameserver_output += "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
+							output += '\n' + "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
 						end
 						%>
-						{{ owner_output.encode('utf8') }}
-						Owner: {{ other_metadata['owner_contact']['first_name'] }} {{ other_metadata['owner_contact']['last_name'] }} (Organisation name: {{ other_metadata['owner_contact']['org_name'] }}) 
-						Email: {{ other_metadata['owner_contact']['email'] }}
-						{{ nameserver_output.encode('utf8') }}
+						{{ output.encode('utf8') }}
 					</span>
 				% else:
 					<span class="excerpt">{{! extract.encode('utf8') }}</span><br />
