@@ -136,7 +136,7 @@ class DomainDistiller(Distiller):
 			'created':          created,
 			'updated':          updated,
 			'expiry':           expiry,
-			'owner_contact':    owner_contact,
+			'owner_contact':    u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
 			'nameservers':      nameservers,
 			}
 
