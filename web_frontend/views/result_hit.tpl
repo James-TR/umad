@@ -101,6 +101,9 @@
 					% if other_metadata:
 						<%
 						# Don't need to print these keys, they're already part of the main display
+						if doc_type == 'domain':
+							other_metadata.pop('owner_contact', None)
+						end
 						other_metadata.pop('excerpt', None)
 						other_metadata.pop('title', None)
 						other_metadata.pop('doc_type', None)
