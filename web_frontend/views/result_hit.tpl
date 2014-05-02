@@ -101,18 +101,10 @@
 					% if other_metadata:
 						<%
 						# Don't need to print these keys, they're already part of the main display
-						if 'excerpt' in other_metadata:
-							del(other_metadata['excerpt'])
-						end
-						if 'title' in other_metadata:
-							del(other_metadata['title'])
-						end
-						if 'doc_type' in other_metadata:
-							del(other_metadata['doc_type'])
-						end
-						if 'public_blob' in other_metadata:
-							del(other_metadata['public_blob'])
-						end
+						other_metadata.pop('excerpt', None)
+						other_metadata.pop('title', None)
+						other_metadata.pop('doc_type', None)
+						other_metadata.pop('public_blob', None)
 						%>
 					<div class="other-metadata alert alert-success">
 						Other metadata
