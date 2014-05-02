@@ -9,8 +9,8 @@ UMAD inspects the URL of the document (according to rules that you specify) to
 derive the `doc_type`, which is a short string identifying the human source of
 the document.
 
-You can search for a particular doc_type using doc_type: query.  For example, 
-RT support tickets have a `doc_type` of "rt", which will allow you to 
+You can search for a particular `doc_type` using `doc_type: query`.  For example,
+RT support tickets have a `doc_type` of "rt", which will allow you to
 intuitively search for RT support tickets like so:
 
     rt:emergency
