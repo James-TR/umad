@@ -183,9 +183,6 @@ def heartbeat():
 	if num_results < min_results: output.append( "✘ Reporting {} results, not even one for each doctype, something is wrong".format(num_results) )
 	else:                         output.append( "✔ Reporting {} results, that's at least one for each doctype ({})".format(num_results, min_results) )
 
-	if num_results < expected_results: output.append( "✘ Not enough results. Expected at least {}, but only {} reported".format(expected_results, num_results) )
-	else:                              output.append( "✔ Reported number of results ({}) matches expectations".format(expected_results) )
-
 	# Check if we got the expected number of results shown on the page
 	# XXX: Does this work for domains?
 	counted_hits = rendered_html.count('div class="hitlink"')
