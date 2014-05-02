@@ -62,7 +62,7 @@
 						{{ output.encode('utf8') }}
 						<a href="{{ new_ticket_link }}" target="_blank" ><span class="glyphicon glyphicon-plus"></span> Create a ticket</a>
 						<a href="{{ customer_tickets_link }}"><span class="glyphicon glyphicon-list"></span> Show customer's tickets</a>
-					</span><br />
+					</span>
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
 						<% output = ''
@@ -86,7 +86,7 @@
 						{{ output.encode('utf8') }}
 					</span>
 				% else:
-					<span class="excerpt">{{! extract.encode('utf8') }}</span><br />
+					<span class="excerpt">{{! extract.encode('utf8') }}</span>
 				% end
 
 				<div class="reindex-button">
