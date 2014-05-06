@@ -37,7 +37,7 @@
 					-->
 				</div>
 
-				<!-- Some doc types don't actually have URLs, so we don't display them -->
+				% # Some doc types don't actually have URLs, so we don't display them
 				% if doc_type not in ['domain']:
 					% if "name" in other_metadata or "title" in other_metadata:
 					<div class="hiturl">{{ id.encode('utf8') }}</div>
