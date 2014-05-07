@@ -94,6 +94,7 @@ def server_static(filepath):
 
 @route('/heartbeat')
 def heartbeat():
+	output = []
 	response.content_type = 'text/plain; charset=UTF-8'
 
 	search_term = '*'
@@ -150,12 +151,15 @@ def heartbeat():
 
 		template_dict['hits'].append(hit)
 
-	rendered_html = template('mainpage', template_dict).encode('utf8')
+	try:
+		rendered_html = template('mainpage', template_dict).encode('utf8')
+	except Exception as e:
+		rendered_html = ''
+		import traceback
+		output.append( "✘ There was a rendering failure in the templates: {}".format( traceback.format_exc().strip().rpartition('\n')[-1] ) )
 
 
-	# Perform analysis, comrade!
-	output = []
-
+	# Now perform analysis, comrade!
 
 	# Each source should have at least one document in them.
 	# When searching for everything, check that we have buttons for every source
