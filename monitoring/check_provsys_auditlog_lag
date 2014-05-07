@@ -90,7 +90,7 @@ class UmadProvsysAuditlogLagCheck(NagiosCheck):
             debug("The last auditlog entry we enqueued had  ID {0} and timestamp {1}".format(auditlog_position, auditlog_timestamp))
 
             debug("Fetching newest auditlog URL")
-            response = requests.get(AUDITLOGS_URL, auth=('script','script'), verify='/etc/ssl/AnchorCA.pem', headers=json_headers, params={'_limit':1})
+            response = requests.get(AUDITLOGS_URL, auth=('script','script'), verify='AnchorCA.pem', headers=json_headers, params={'_limit':1})
             if response.status_code != 200:
                 raise FailedToRetrieveAuditlogs("Didn't get a 200 Success while finding newest auditlog entry, something has exploded badly, bailing")
 
@@ -100,7 +100,7 @@ class UmadProvsysAuditlogLagCheck(NagiosCheck):
             newest_url = auditlog_urls[0]
             debug("Success, fetching newest auditlog entry: {0}".format(newest_url))
 
-            response = requests.get(newest_url, auth=('script','script'), verify='/etc/ssl/AnchorCA.pem', headers=json_headers)
+            response = requests.get(newest_url, auth=('script','script'), verify='AnchorCA.pem', headers=json_headers)
             if response.status_code != 200:
                 raise FailedToRetrieveAuditlogs("Didn't get a 200 Success while retrieving auditlog entry {0}, something has exploded badly, bailing".format(newest_url))
 
