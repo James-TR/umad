@@ -35,6 +35,8 @@ from nagioscheck import PerformanceMetric, Status
 
 WARN_DEFAULT = 300
 CRIT_DEFAULT = 3600
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
 
 AUDITLOGS_URL = 'https://resources.engineroom.anchor.net.au/logs'
 json_headers = {}
@@ -58,11 +60,19 @@ class UmadProvsysAuditlogLagCheck(NagiosCheck):
         self.add_option('c', 'crit-threshold', 'critical',
                         'check critical threshold for oldest URL in seconds (default %d)' %
                             CRIT_DEFAULT)
+        self.add_option('a', 'address', 'host',
+                        'IP address on which Redis server is listening (default %s)' %
+                            REDIS_HOST)
+        self.add_option('p', 'port', 'port',
+                        'TCP port on which Redis server is listening (default %d)' %
+                            REDIS_PORT)
 
 
     def check(self, opts, args):
         warn = WARN_DEFAULT
         crit = CRIT_DEFAULT
+        host = REDIS_HOST
+        port = REDIS_PORT
         debug_lines = []
 
         if opts.warning:
@@ -71,12 +81,18 @@ class UmadProvsysAuditlogLagCheck(NagiosCheck):
         if opts.critical:
             crit = float(opts.critical)
 
+        if opts.host:
+            host = opts.host
+
+        if opts.port:
+            port = opts.port
+
         def debug(msg=''):
             debug_lines.append(msg)
 
 
         try:
-            scratchpad = redis.StrictRedis(host='localhost', port=6379, db=0, socket_timeout=1)
+            scratchpad = redis.StrictRedis(host=host, port=port, db=0, socket_timeout=1)
             pipeline = scratchpad.pipeline()
             pipeline.get('auditlog_position')
             pipeline.get('auditlog_position_timestamp')
