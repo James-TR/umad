@@ -35,4 +35,4 @@ kick_server:
 	ssh umad.anchor.net.au -- sudo -u umad make -C /home/umad/app pull_deploy
 
 clean-pyc:
-	-@rm -v */*.pyc
+	-@rm -v */*.pyc *.pyc
