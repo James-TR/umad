@@ -70,8 +70,6 @@
 							output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
 						end
 						if other_metadata.has_key('au_registrant_info'):
-							if not other_metadata['au_registrant_info'].has_key('registrant_id'):
-								print id
 							# output += '\n' + "Registrant: {registrant_name} ({registrant_id})".format(**other_metadata['au_registrant_info'])
 							output += '\n' + "{first_name} {last_name} {email}".format(**other_metadata['owner_contact'])
 						else:
