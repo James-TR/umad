@@ -93,7 +93,8 @@ def main(argv=None):
 					break
 				url = urls[0]
 
-				delete(url)
+				try:                   delete(url)
+				except Exception as e: debug("Something went boom while deleting {0}: {1}".format(url, e))
 
 			# Process additions/updates
 			while True:
@@ -106,7 +107,8 @@ def main(argv=None):
 					break
 				url = urls[0]
 
-				index(url)
+				try:                   index(url)
+				except Exception as e: debug("Something went boom while indexing {0}: {1}".format(url, e))
 
 			debug("The barber is napping")
 			teh_redis.brpop('barber')

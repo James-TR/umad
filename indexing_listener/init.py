@@ -55,7 +55,7 @@ def index():
 		pipeline.execute() # will return something like:   [ {0|1}, num_dummies ]
 		debug(u"Successful insertion of {0} for {1}".format(url, human_action))
 	except Exception as e:
-		abort(500, "Something went boom: {0}".format(e))
+		abort(500, "Something went boom while inserting {0}: {1}".format(url, e))
 
 
 	return u"Success, enqueued URL for {0}: '{1}'".format(human_action, url)
