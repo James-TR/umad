@@ -96,7 +96,7 @@ class CustomerDistiller(Distiller):
 		customer_url_match = re.match(r'https://customer\.api\.anchor\.com\.au/customers/(\d+)$', url)
 		if customer_url_match is None:
 			raise ValueError("This URL doesn't match our idea of a customer URL: {0}".format(url))
-		supplied_customer_id = customer_url_match.group(1)
+		supplied_customer_id = int(customer_url_match.group(1))
 
 		customer_response = requests.get(url, auth=api_credentials, verify=True, headers=self.accept_json)
 		try: customer_response.raise_for_status()
