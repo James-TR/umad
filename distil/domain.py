@@ -140,7 +140,7 @@ class DomainDistiller(Distiller):
 			}
 
 		if tld_data:
-			if tld_data['au_registrant_info']:
+			if 'au_registrant_info' in tld_data:
 				au_data = tld_data['au_registrant_info']
 				au_info = {}
 
