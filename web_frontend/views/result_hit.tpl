@@ -47,13 +47,13 @@
 				% if doc_type == 'customer':
 					<span class="excerpt"> Customer id: {{ other_metadata['customer_id'] }}\\
 						<% output = ''
-						if other_metadata.has_key('primary_contacts'):
+						if 'primary_contacts' in other_metadata:
 							output += '\n' + other_metadata['primary_contacts']
 						end
-						if other_metadata.has_key('billing_contacts'):
+						if 'billing_contacts' in other_metadata:
 							output += '\n' + other_metadata['billing_contacts']
 						end
-						if other_metadata.has_key('technical_contacts'):
+						if 'technical_contacts' in other_metadata:
 							output += '\n' + other_metadata['technical_contacts']
 						end
 						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value={customer_id}'.format(**other_metadata)
@@ -66,11 +66,11 @@
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
 						<% output = ''
-						if other_metadata.has_key('customer_name'):
+						if 'customer_name' in other_metadata:
 							output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
 						end
-						if other_metadata.has_key('au_registrant_info'):
-							# output += '\n' + "Registrant: {registrant_name} ({registrant_id})".format(**other_metadata['au_registrant_info'])
+						if 'au_registrant' in other_metadata:
+							output += '\n' + "Registrant: {}".format(other_metadata['au_registrant'])
 							output += '\n' + "{first_name} {last_name} {email}".format(**other_metadata['owner_contact'])
 						else:
 							if other_metadata['owner_contact']['org_name'] == u"{first_name} {last_name}".format(**other_metadata['owner_contact']):
@@ -79,7 +79,7 @@
 								output += '\n' + "{first_name} {last_name} ({org_name}) {email}".format(**other_metadata['owner_contact'])
 							end
 						end
-						if other_metadata.has_key('nameservers'):
+						if 'nameservers' in other_metadata:
 							output += '\n' + "Nameservers: {} ".format(" ".join(sorted(other_metadata['nameservers'])))
 						end
 						%>

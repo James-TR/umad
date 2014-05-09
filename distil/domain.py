@@ -120,7 +120,7 @@ class DomainDistiller(Distiller):
 
 			customer = customer_response.json()
 			customer_name = customer['description']
-			blob += (' {} {} ').format(customer_name, customer_id)
+			blob += (' {0} {1} ').format(customer_name, customer_id)
 		else:
 			customer_id = None
 			customer_name = None
@@ -140,8 +140,30 @@ class DomainDistiller(Distiller):
 			}
 
 		if tld_data:
-			for key in tld_data:
-				domainblob[key] = tld_data[key]
+			if tld_data['au_registrant_info']:
+				au_data = tld_data['au_registrant_info']
+				au_info = {}
+
+				if 'registrant_name' in au_data:
+					au_info['name'] = au_data['registrant_name']
+				else: 
+					au_info['name'] = au_data.get('eligibility_name')
+
+				if 'registrant_id' in au_data:
+					au_info['id']      = au_data['registrant_id']
+				else:
+					au_info['id'] = au_data.get('eligibility_id')
+
+				if 'registrant_id_type' in au_data:
+					au_info['id_type']      = au_data['registrant_id_type']
+				else:
+					au_info['id_type'] = au_data.get('eligibility_id_type')
+
+				au_info['type']    = au_data.get('eligibility_type')
+				domainblob['au_registrant'] = "{name} ({id_type}: {id} - {type})".format(**au_info).encode('utf8')
+			else:
+				for key in tld_data:
+					domainblob[key] = tld_data[key]
 
 		# Only add the extra contact fields into the domainblob if they
 		# actually exist. "Empty" fields will have u'None' in them.
