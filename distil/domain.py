@@ -116,7 +116,7 @@ class DomainDistiller(Distiller):
 			customer_response = requests.get(customer_url, auth=api_credentials, verify=True, headers=self.accept_json)
 			# XXX: Do we really want to die here?
 			try: customer_response.raise_for_status()
-			except: raise RuntimeError("Couldn't get customer {0} from API, HTTP error {1}, probably not allowed to view customer".format(customer_id, customer_response.status_code))
+			except: raise RuntimeError("Indexing {0}: couldn't get customer {1} from API, HTTP error {2}, probably not allowed to view customer".format(name, customer_id, customer_response.status_code))
 
 			customer = customer_response.json()
 			customer_name = customer['description']
