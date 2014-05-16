@@ -82,7 +82,10 @@ class DomainDistiller(Distiller):
 		# - au_registrant_info    <dict> of <str>
 
 		created     = self.parse_date_string(domain['registry_createdate'])
-		updated     = self.parse_date_string(domain['registry_updatedate'])
+		if 'registry_updatedate' in domain: 
+			updated = self.parse_date_string(domain['registry_updatedate'])
+		else:
+			updated = None
 		expiry      = self.parse_date_string(domain['registry_expiredate'])
 		tld_data    = domain['tld_data']
 
