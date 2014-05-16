@@ -119,7 +119,7 @@ class RtTicketDistiller(Distiller):
 			ticket_response.raise_for_status()
 		except:
 			#debug("Couldn't get ticket from API, HTTP error %s, probably not allowed to view ticket" % ticket_response.status_code)
-			if response.status_code == 404:
+			if ticket_response.status_code == 404:
 				self.enqueue_deletion()
 			return
 
