@@ -34,7 +34,7 @@ class MoinMapDistiller(Distiller):
 			raise RuntimeError("You must provide Map wiki credentials, please set MAPWIKI_USER and MAPWIKI_PASS")
 
 		# Grab the printable version of the page
-		response = requests.get(url+'?action=print', auth=wiki_credentials, params={'action':'raw'}, verify='AnchorCA.pem')
+		response = requests.get(url, auth=wiki_credentials, params={'action':'print'}, verify='AnchorCA.pem')
 		try:
 			response.raise_for_status()
 		except:
@@ -68,8 +68,6 @@ class MoinMapDistiller(Distiller):
 			if line not in page_lines:
 				page_lines.append(line)
 
-		print inc_duplicates
-		print page_lines
 		# Try to find a suitable title - either the first <h1>, or if that doesn't exist, from the URI
 		title = ' '.join([ WIKIWORD_RE.sub(r'\1 \2', x) for x in page_name.split('/') ])
 		excerpt = None
