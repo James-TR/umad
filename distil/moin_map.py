@@ -88,13 +88,21 @@ class MoinMapDistiller(Distiller):
 		map_rough_title_chunks  = set(page_name.split('/'))
 		map_rough_title_chunks |= set([ WIKIWORD_RE.sub(r'\1 \2', x) for x in map_rough_title_chunks ])
 
+		# Get last updated time
+		page_info = page.find('p', id='pageinfo').text
+		date_string = re.search(r'(\d+-\d+-\d+ \d+:\d+:\d+)', page_info).group(0)
+		last_updated = self.parse_date_string(date_string)
+
 		# Good to go now
 		document = {}
 		document['url']  = url
 		document['blob'] = blob
 		document['local_id'] = ' '.join(map_rough_title_chunks)
 		document['title']    = title
+		document['last_updated']  = last_updated
 		if excerpt:
 			document['excerpt']  = excerpt
 
+		print document
+		exit(1)
 		yield document
