@@ -4,7 +4,6 @@ import requests
 TITLE_RE           = re.compile(r'<<Title(\((.*)\))?>>')
 NON_TITLE_MACRO_RE = re.compile(r'<<(?!Title[(>])')
 WIKIWORD_RE        = re.compile(r'([a-z]+)([A-Z])')
-REDIRECT_RE        = re.compile(r'#redirect\b', re.I)
 
 from distiller import Distiller
 
@@ -64,11 +63,6 @@ class MoinMapDistiller(Distiller):
 		# XXX: what if the page is empty? Might break a whole bunch of assumptions below this point.
 
 		if page_lines:
-			if REDIRECT_RE.match(line):
-				# Null document, don't index it
-				return
-				# Alternatively, enqueue a deletion?
-				# self.enqueue_deletion()
 
 		# Discard all lines beginning with one of: (keep line if all checks are not-hit)
 		#  - Comment (#)
