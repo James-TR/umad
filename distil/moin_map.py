@@ -1,8 +1,7 @@
 import re
 import requests
+from bs4 import BeautifulSoup
 
-TITLE_RE           = re.compile(r'<<Title(\((.*)\))?>>')
-NON_TITLE_MACRO_RE = re.compile(r'<<(?!Title[(>])')
 WIKIWORD_RE        = re.compile(r'([a-z]+)([A-Z])')
 
 from distiller import Distiller
@@ -34,12 +33,13 @@ class MoinMapDistiller(Distiller):
 		except:
 			raise RuntimeError("You must provide Map wiki credentials, please set MAPWIKI_USER and MAPWIKI_PASS")
 
-		# Grab the page
-		response = requests.get(url, auth=wiki_credentials, params={'action':'raw'}, verify='AnchorCA.pem')
+		# Grab the printable version of the page
+		response = requests.get(url+'?action=print', auth=wiki_credentials, params={'action':'raw'}, verify='AnchorCA.pem')
 		try:
 			response.raise_for_status()
 		except:
 			#debug("Error getting page from map wiki, got HTTP response {0}".format(response.status_code))
+			# Deleted pages have a status of 404
 			if response.status_code == 404:
 				self.enqueue_deletion()
 			return
@@ -56,55 +56,35 @@ class MoinMapDistiller(Distiller):
 		if page_name == '': # Special case for the home page
 			page_name = 'ClueStick'
 
-		# Get the content
-		page_lines = [ line.strip() for line in response.content.split('\n') ]
-		page_lines = [ line for line in page_lines if line ]
+		# Get the parts of the content we care about
+		page = BeautifulSoup(response.text)
+		content = page.find_all('div', id='content')[0]
+		inc_duplicates = [ line.text.strip() for line in content.find_all(re.compile("^p|^li|^h[\d]+|^a")) ]
 
-		# XXX: what if the page is empty? Might break a whole bunch of assumptions below this point.
+		# Remove empty & duplicate lines
+		inc_duplicates = [line for line in inc_duplicates if line ]
+		page_lines = []
+		for line in inc_duplicates:
+			if line not in page_lines:
+				page_lines.append(line)
 
-		if page_lines:
+		print inc_duplicates
+		print page_lines
+		# Try to find a suitable title - either the first <h1>, or if that doesn't exist, from the URI
+		title = ' '.join([ WIKIWORD_RE.sub(r'\1 \2', x) for x in page_name.split('/') ])
+		excerpt = None
+		if page_lines and content.find('h1'):
+			title = content.find('h1').text
 
-		# Discard all lines beginning with one of: (keep line if all checks are not-hit)
-		#  - Comment (#)
-		#  - Table tags (||)
-		page_lines = [ line for line in page_lines if  all( [ not line.startswith(x) for x in ['#', '||'] ] )  ]
+			# If the first line of the page is the same as the title, don't add it into the blob and excerpt
+			if page_lines[0].replace(' ','').endswith(title.replace(' ', '')):
+				del(page_lines[0])
 
-		# Try to find a suitable title
-		lines_starting_with_title_macro = [ line for line in page_lines[:3] if line.startswith('<<Title') ]
-		lines_starting_with_equals_sign = [ line for line in page_lines[:3] if line.startswith('=') ]
-
-		title = None
-		if lines_starting_with_title_macro:
-			title_line = lines_starting_with_title_macro[0]
-			title_match = TITLE_RE.match(title_line)
-			if not title_match.group(2):
-				title=None
-			else:
-				title = TITLE_RE.sub(r'\2', title_line).strip('"\'')
-		elif lines_starting_with_equals_sign:
-			title_line = lines_starting_with_equals_sign[0]
-			title = title_line.strip('= ')
-			page_lines.remove(title_line)
-
-		if not title: # Either got left with an empty string, or still None
-			path_components = page_name.split('/')
-			title = ' '.join([ WIKIWORD_RE.sub(r'\1 \2', x) for x in path_components ])
-
-
-		# Strip all lines that are just macros
-		# XXX: This macros stripping needs a rethink
-		page_lines = [ line for line in page_lines if not NON_TITLE_MACRO_RE.match(line) ]
-
-		# Drop the <<Title>> macros out of the output
-		page_lines = [ line for line in page_lines if not TITLE_RE.match(line) ]
+			# Try and find an exciting excerpt, this is complete and utter guesswork
+			excerpt = '\n'.join(page_lines[:10])
 
 		# Content is now considered tidy
 		blob = '\n'.join([title] + page_lines)
-
-		# Try and find an exciting excerpt, this is complete and utter guesswork
-		excerpt = None
-		if page_lines:
-			excerpt = '\n'.join(page_lines[:10])
 
 		# Allow for title keyword searching
 		map_rough_title_chunks  = set(page_name.split('/'))
