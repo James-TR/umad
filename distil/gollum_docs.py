@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from lxml import html
 
@@ -66,9 +67,13 @@ class GollumDistiller(Distiller):
 		page_lines = [ line.strip() for line in content.split('\n') ]
 
 		# Kill empty lines and clean out footer
+		last_updated = None
 		page_lines = [ line for line in page_lines if line ]
 		if page_lines[-1] == 'Delete this Page': del(page_lines[-1])
-		if page_lines[-1].startswith('Last edited by '): del(page_lines[-1])
+		if page_lines[-1].startswith('Last edited by '): 
+			date_string = re.search(r'(\d+-\d+-\d+ \d+:\d+:\d+)', page_lines[-1]).group(0)
+			last_updated = self.parse_date_string(date_string)
+			del(page_lines[-1])
 		# Kill residue from conversion
 		page_lines = [ line for line in page_lines if line != '!toc' ]
 
@@ -115,9 +120,6 @@ class GollumDistiller(Distiller):
 		document['local_id'] = local_id
 		document['title']    = title
 		document['excerpt']  = excerpt
-
-		for key in document:
-			print u"{0}\n\t{1}\n".format(key, document[key][:400]).encode('utf8')
-
+		document['last_updated'] = last_updated
 
 		yield document
