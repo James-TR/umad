@@ -2,7 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-WIKIWORD_RE        = re.compile(r'([a-z]+)([A-Z])')
+WIKIWORD_RE = re.compile(r'([a-z]+)([A-Z])')
 
 from distiller import Distiller
 
@@ -101,7 +101,7 @@ class MoinMapDistiller(Distiller):
 		document['title']    = title
 		document['last_updated']  = last_updated
 		if excerpt:
-			document['excerpt']  = excerpt
+			document['excerpt'] = excerpt
 
 		print document
 		exit(1)

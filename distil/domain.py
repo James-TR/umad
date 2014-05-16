@@ -73,16 +73,18 @@ class DomainDistiller(Distiller):
 		# - owner_contact         <dict> of <str>
 		# - au_registrant_info    <dict> of <str>
 
-		if 'registry_createdate' in domain: 
+		if 'registry_createdate' in domain:
 			created = self.parse_date_string(domain['registry_createdate'])
 		else:
 			created = None
-		if 'registry_updatedate' in domain: 
+
+		if 'registry_updatedate' in domain:
 			updated = self.parse_date_string(domain['registry_updatedate'])
 		else:
 			updated = None
-		expiry      = self.parse_date_string(domain['registry_expiredate'])
-		tld_data    = domain['tld_data']
+
+		expiry   = self.parse_date_string(domain['registry_expiredate'])
+		tld_data = domain['tld_data']
 
 		# OpenSRS is a piece of shit
 		if tld_data == 'None': tld_data = None
@@ -123,7 +125,7 @@ class DomainDistiller(Distiller):
 				blob += (' {0} {1} ').format(customer_name, customer_id)
 			except:
 				print ("Indexing {0}: couldn't get customer {1} from API, HTTP error {2}, probably not allowed to view customer".format(name, customer_id, customer_response.status_code))
-		
+
 		domainblob = {
 			'name':             name,
 			'customer_name':    customer_name,
@@ -145,7 +147,7 @@ class DomainDistiller(Distiller):
 
 				if 'registrant_name' in au_data:
 					au_info['name'] = au_data['registrant_name']
-				else: 
+				else:
 					au_info['name'] = au_data.get('eligibility_name')
 
 				if 'registrant_id' in au_data:
