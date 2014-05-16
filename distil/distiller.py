@@ -53,7 +53,8 @@ class Distiller(object):
 		raise NotImplementedError("Distiller plugins must implement blobify()")
 
 	def parse_date_string(self, date_string):
-		datetime = parse(date_string)
-		if datetime.tzinfo is None:
-			datetime = datetime.replace(tzinfo=tzutc())
-		return datetime.astimezone(tzlocal()).strftime('%Y-%m-%dT%H:%M:%S')
+		# Parse a textual timestamp into a timezone-aware timestamp.
+		timestamp = parse(date_string)
+		if timestamp.tzinfo is None:
+			timestamp = timestamp.replace(tzinfo=tzutc())
+		return timestamp

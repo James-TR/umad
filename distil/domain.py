@@ -67,9 +67,9 @@ class DomainDistiller(Distiller):
 		# - url                   <str>
 		# - customer_id           <int>
 		# - customer_name         <unicode>
-		# - created               <str>
-		# - updated               <str>
-		# - expiry                <str>
+		# - created               <datetime>
+		# - updated               <datetime>
+		# - expiry                <datetime>
 		# - owner_contact         <dict> of <str>
 		# - au_registrant_info    <dict> of <str>
 
@@ -101,7 +101,7 @@ class DomainDistiller(Distiller):
 		# Create the blob
 		blob = " ".join([ name,
 		u"{first_name} {last_name} ({org_name}) {email}".format(**owner_contact).encode('utf8'),
-		"Expiry:", expiry.encode('utf8'),
+		"Expiry:", expiry.strftime('%Y-%m-%d'),
 		"Nameservers:", ", ".join(nameservers)
 		])
 
@@ -133,12 +133,14 @@ class DomainDistiller(Distiller):
 			'url':              url,
 			'local_id':         name,
 			'customer_id':      customer_id,
-			'created':          created,
-			'updated':          updated,
 			'expiry':           expiry,
 			'owner_contact':    owner_contact,
 			'nameservers':      nameservers,
 			}
+
+		# Not always present
+		if created is not None: domainblob['created'] = created
+		if updated is not None: domainblob['updated'] = updated
 
 		if tld_data:
 			if 'au_registrant_info' in tld_data:
