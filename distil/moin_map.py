@@ -103,6 +103,4 @@ class MoinMapDistiller(Distiller):
 		if excerpt:
 			document['excerpt'] = excerpt
 
-		print document
-		exit(1)
 		yield document
