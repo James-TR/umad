@@ -62,16 +62,16 @@ def serve_opensearch_definition():
   <Description>{{description}}</Description>
   <Tags>{{tags}}</Tags>
   <Contact>{{contact}}</Contact>
-  <Url type="text/html" 
+  <Url type="text/html"
        template="{{search_root}}?q={searchTerms}&amp;count={count?}"/>
-  <Url type="application/opensearchdescription+xml" 
-       rel="self" 
+  <Url type="application/opensearchdescription+xml"
+       rel="self"
        template="{{search_root}}umad-opensearch.xml"/>
-  <Image type="image/x-icon" 
-         height="16" 
+  <Image type="image/x-icon"
+         height="16"
          width="16">{{search_root}}static/img/badapple16.ico</Image>
-  <Image type="image/png" 
-         height="64" 
+  <Image type="image/png"
+         height="64"
          width="64">{{search_root}}static/img/badapple64.png</Image>
 </OpenSearchDescription>'''
 
