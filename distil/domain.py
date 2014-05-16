@@ -81,7 +81,10 @@ class DomainDistiller(Distiller):
 		# - owner_contact         <dict> of <str>
 		# - au_registrant_info    <dict> of <str>
 
-		created     = self.parse_date_string(domain['registry_createdate'])
+		if 'registry_createdate' in domain: 
+			created = self.parse_date_string(domain['registry_createdate'])
+		else:
+			created = None
 		if 'registry_updatedate' in domain: 
 			updated = self.parse_date_string(domain['registry_updatedate'])
 		else:
