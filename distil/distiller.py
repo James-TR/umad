@@ -1,5 +1,7 @@
 import os
 import requests
+from dateutil.parser import *
+from dateutil.tz import *
 
 class Distiller(object):
 	def __init__(self, url, indexer_url='https://umad-indexer.anchor.net.au/'):
@@ -49,3 +51,9 @@ class Distiller(object):
 		# turning self.docs into an iteratori that yields dicts. It's
 		# also acceptable for blobify to return a list of dicts.
 		raise NotImplementedError("Distiller plugins must implement blobify()")
+
+	def parse_date_string(self, date_string):
+		datetime = parse(date_string)
+		if datetime.tzinfo is None:
+			datetime = datetime.replace(tzinfo=tzutc())
+		return datetime.astimezone(tzlocal()).strftime('%Y-%m-%dT%H:%M:%S')

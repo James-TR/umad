@@ -1,5 +1,3 @@
-from dateutil.parser import *
-from dateutil.tz import *
 import requests
 from opensrs import OpenSRS
 import json
@@ -58,12 +56,6 @@ class DomainDistiller(Distiller):
 		""" From http://opensrs.com/docs/apidomains/get_domain_type_all_info_xml.htm """
 		info = self.query('get', 'domain', { 'domain': domain, 'type': 'all_info',})
 		return info['attributes']
-
-	def parse_date_string(self, date_string):
-		datetime = parse(date_string)
-		if datetime.tzinfo is None:
-			datetime = datetime.replace(tzinfo=tzutc())
-		return datetime.astimezone(tzlocal()).strftime('%Y-%m-%d')
 
 	def blobify(self):
 		url = self.url
