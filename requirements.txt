@@ -9,7 +9,7 @@ bottle>=0.12
 chardet
 elasticsearch
 lxml
-bs4
+beautifulsoup4
 
 python-dateutil
 redis
