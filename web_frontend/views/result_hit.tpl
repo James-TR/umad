@@ -85,6 +85,9 @@
 						%>
 						{{ output.encode('utf8') }}
 					</span>
+				% elif doc_type == 'rt':
+					<span class="excerpt"> <span class="rt_status">Status: {{ other_metadata['status'] }} </span>(Last updated: {{ other_metadata['last_updated_sydney'] }})
+					{{! other_metadata['excerpt'].encode('utf8') }}</span>
 				% else:
 					<span class="excerpt">{{! extract.encode('utf8') }}</span>
 				% end
