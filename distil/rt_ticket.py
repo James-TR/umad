@@ -57,8 +57,11 @@ class RtTicketDistiller(Distiller):
 						u'In the meantime, feel free to check out the following resources, to learn a little more about the Anchor Team and how we work.',
 						u'* Our Blog: http://www.anchor.com.au/blog/'
 					)
-
 		body_lines = [ line for line in body_lines if not line.startswith(boilerplate) ]
+
+		# Remove reply text - eg "On Tuesday, 20 May 2014 4:43 PM, New support request via Anchor Helpdesk <support@anchor.com.au> wrote:"
+		# XXX: Do we want to clear the text below this that appears in other messages as well?
+		body_lines = [ line for line in body_lines if not (line.startswith('On') and 'via Anchor Helpdesk' in line and line.endswith('wrote:')) ]
 
 		# Remove thanks and signatures
 		lines_beginning_with_thanks = [ line for line in body_lines if line.startswith('Thanks') and len(line) < 10 ] # Kill trailing platitudes
