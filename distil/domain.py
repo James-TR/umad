@@ -83,7 +83,11 @@ class DomainDistiller(Distiller):
 		else:
 			updated = None
 
-		expiry   = self.parse_date_string(domain['registry_expiredate'])
+		if 'registry_expiredate' in domain:
+			expiry   = self.parse_date_string(domain['registry_expiredate'])
+		else:
+			expiry = self.parse_date_string(domain['expiredate'])
+
 		tld_data = domain['tld_data']
 
 		# OpenSRS is a piece of shit
