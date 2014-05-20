@@ -47,6 +47,20 @@ class RtTicketDistiller(Distiller):
 		body_lines = [ line for line in body_lines if not line.startswith('>') ] # Quoted lines
 		body_lines = [ line for line in body_lines if not line == '' ]           # Empty lines
 		body_lines = [ line for line in body_lines if line not in ('Hi,', 'Hello,') or len(line) > 20 ] # Greetings
+
+		# Remove Anchor boilerplate when customers reply to the message when they first file a ticket
+		boilerplate = ( u'Hello and thanks for your email.',
+						u'This is an automated response from our email robots.',
+						u'If you\u2019d like to speak to someone about your issue immediately, please contact us via phone, being sure to keep the issue number handy so we can refer to it quickly:',
+						u'* Australia Local call 1300 883 979', u'* US toll free (888) 250 8847',
+						u'If replying by email, please ensure that the subject line remains the same as it is now.',
+						u'In the meantime, feel free to check out the following resources, to learn a little more about the Anchor Team and how we work.',
+						u'* Our Blog: http://www.anchor.com.au/blog/'
+					)
+
+		body_lines = [ line for line in body_lines if not line.startswith(boilerplate) ]
+
+		# Remove thanks and signatures
 		lines_beginning_with_thanks = [ line for line in body_lines if line.startswith('Thanks') and len(line) < 10 ] # Kill trailing platitudes
 		if lines_beginning_with_thanks:
 			body_lines = body_lines[:body_lines.index(lines_beginning_with_thanks[0])]
