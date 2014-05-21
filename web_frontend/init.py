@@ -53,13 +53,6 @@ def highlight_document_source(url):
 	return ('DEFAULT', '')
 
 def search(search_term, count):
-	# Fetch environment
-	global VERSION_STRING
-	VERSION_STRING = 'no version string found'
-	if os.path.exists('RUNNING_VERSION'):
-		with open('RUNNING_VERSION', 'r') as f:
-			VERSION_STRING = f.readline().strip()
-
 	debug(u"Search term: {0}, with count of {1}".format(search_term, count).encode('utf8'))
 
 	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
@@ -275,14 +268,7 @@ def heartbeat():
 @route('/')
 @view('mainpage')
 def mainpage():
-	# Fetch environment
-	global VERSION_STRING
-	VERSION_STRING = 'no version string found'
-	if os.path.exists('RUNNING_VERSION'):
-		with open('RUNNING_VERSION', 'r') as f:
-			VERSION_STRING = f.readline().strip()
-
-	search_term     = request.query.q     or ''
+	search_term = request.query.q or ''
 	count = request.query.count or MAX_HITS
 	try: 
 		count = int(count)
