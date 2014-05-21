@@ -176,7 +176,7 @@ def serve_opensearch_definition():
   <Tags>{{tags}}</Tags>
   <Contact>{{contact}}</Contact>
   <Url type="text/html"
-       template="{{search_root}}?q={search_terms}&amp;count={count?}"/>
+       template="{{search_root}}?q={searchTerms}&amp;count={count?}"/>
   <Url type="application/opensearchdescription+xml"
        rel="self"
        template="{{search_root}}umad-opensearch.xml"/>
