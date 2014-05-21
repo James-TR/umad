@@ -85,7 +85,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'clickHit',
 					'resultPageUUID': resultsUUID,
-					'search_term': {{ !json.dumps(search_term) }},
+					'searchTerm': {{ !json.dumps(search_term) }},
 					'hitObject': hitObject,
 					'msFromLoadToClick': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -102,7 +102,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'clickReindex',
 					'resultPageUUID': resultsUUID,
-					'search_term': {{ !json.dumps(search_term) }},
+					'searchTerm': {{ !json.dumps(search_term) }},
 					'hitObject': hitObject,
 					'msFromLoadToClick': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -118,7 +118,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'userLeftPage',
 					'resultPageUUID': resultsUUID,
-					'search_term': {{ !json.dumps(search_term) }},
+					'searchTerm': {{ !json.dumps(search_term) }},
 					'hotOrNot': userClickCount ? 'HOT' : 'NOT',
 					'msFromLoadToClose': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -134,8 +134,8 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'userSearchedAgain',
 					'oldResultPageUUID': resultsUUID,
-					'oldsearch_term': {{ !json.dumps(search_term) }},
-					'newsearch_term': $('#searchinput')[0].value,
+					'oldSearchTerm': {{ !json.dumps(search_term) }},
+					'newSearchTerm': $('#searchinput')[0].value,
 					'msFromLoadToSearchAgain': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
 					'clickCountForPage': userClickCount,
