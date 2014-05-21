@@ -14,9 +14,9 @@
 
 		var resultsUUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){r=Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})
 
-		function fillInSearchBox(searchterm) {
+		function fillInSearchBox(search_term) {
 			var box = document.getElementById("searchinput");
-			box.value = searchterm;
+			box.value = search_term;
 			box.focus();
 		}
 
@@ -41,7 +41,7 @@
 		}
 
 
-% if searchterm:
+% if search_term:
 		//
 		// Evil umad analytics!
 		//
@@ -85,7 +85,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'clickHit',
 					'resultPageUUID': resultsUUID,
-					'searchTerm': {{ !json.dumps(searchterm) }},
+					'search_term': {{ !json.dumps(search_term) }},
 					'hitObject': hitObject,
 					'msFromLoadToClick': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -102,7 +102,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'clickReindex',
 					'resultPageUUID': resultsUUID,
-					'searchTerm': {{ !json.dumps(searchterm) }},
+					'search_term': {{ !json.dumps(search_term) }},
 					'hitObject': hitObject,
 					'msFromLoadToClick': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -118,7 +118,7 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'userLeftPage',
 					'resultPageUUID': resultsUUID,
-					'searchTerm': {{ !json.dumps(searchterm) }},
+					'search_term': {{ !json.dumps(search_term) }},
 					'hotOrNot': userClickCount ? 'HOT' : 'NOT',
 					'msFromLoadToClose': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
@@ -134,8 +134,8 @@
 				umadEvilAnalytics(JSON.stringify({
 					'event': 'userSearchedAgain',
 					'oldResultPageUUID': resultsUUID,
-					'oldSearchTerm': {{ !json.dumps(searchterm) }},
-					'newSearchTerm': $('#searchinput')[0].value,
+					'oldsearch_term': {{ !json.dumps(search_term) }},
+					'newsearch_term': $('#searchinput')[0].value,
 					'msFromLoadToSearchAgain': now - documentLoadTimestamp,
 					'timestamp': now / 1000,
 					'clickCountForPage': userClickCount,

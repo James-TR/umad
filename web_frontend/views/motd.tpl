@@ -1,4 +1,4 @@
-% if not searchterm:
+% if not search_term:
 		<div id="motd">
 % else:
 		<div id="motd" class="hidden">

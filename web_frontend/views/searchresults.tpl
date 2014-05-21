@@ -1,6 +1,6 @@
 		<div id="output">
 		<%
-		if searchterm:
+		if search_term:
 			if hits:
 				# XXX: Push sanity futher up the stack
 				for i,hit in enumerate(hits):
@@ -33,7 +33,7 @@
 				% end
 				</ul>
 			% else:
-					No results found for <span class="inline-query-display">{{ searchterm }}</span>
+					No results found for <span class="inline-query-display">{{ search_term }}</span>
 			% end
 		% else:
 			<!-- No results here ^_^ -->

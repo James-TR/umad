@@ -1,6 +1,6 @@
 		<div class="jumbotron">
 			<form name="q" method="get" action="/" 
-% if searchterm:
+% if search_term:
 				onSubmit="evilSearchedAgain()"
 % end
 			>
@@ -8,7 +8,7 @@
 			<div class="input-group input-group">
 				<span class="input-group-addon" id="umadbox">
 					<a href="/?q=cats"><img src="/static/img/umad.png" class="umadlogo" style="border:0;" alt="UMAD logo"></a></span>
-			 	<input type="search" class="form-control" id="searchinput" name="q" placeholder="UMAD?" value="{{ searchterm }}" autofocus="autofocus">
+			 	<input type="search" class="form-control" id="searchinput" name="q" placeholder="UMAD?" value="{{ search_term }}" autofocus="autofocus">
 			</div>
 
 			<div id="search-toggles">

@@ -55,9 +55,9 @@ def highlight_document_source(url):
 def search(search_term, count):
 	debug(u"Search term: {0}, with count of {1}".format(search_term, count).encode('utf8'))
 
-	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
+	# Fill up a dictionary to pass to the templating engine. It expects the search_term and a list of document-hits
 	template_dict = {}
-	template_dict['searchterm'] = search_term
+	template_dict['search_term'] = search_term
 	template_dict['hits'] = []
 	template_dict['hit_limit'] = 0
 	template_dict['valid_search_query'] = True
@@ -68,7 +68,7 @@ def search(search_term, count):
 	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
 
 	# ES is case insensitive, but our query mangling below isn't.  Lets just lowercase it all now before searching
-	search_term = template_dict['searchterm'].lower()
+	search_term = template_dict['search_term'].lower()
 
 	first_word = search_term.split(':')[0]
 	# Some people use synonyms for the doctypes
@@ -176,7 +176,7 @@ def serve_opensearch_definition():
   <Tags>{{tags}}</Tags>
   <Contact>{{contact}}</Contact>
   <Url type="text/html"
-       template="{{search_root}}?q={searchTerms}&amp;count={count?}"/>
+       template="{{search_root}}?q={search_terms}&amp;count={count?}"/>
   <Url type="application/opensearchdescription+xml"
        rel="self"
        template="{{search_root}}umad-opensearch.xml"/>
