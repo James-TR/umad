@@ -52,7 +52,127 @@ def highlight_document_source(url):
 
 	return ('DEFAULT', '')
 
+def search(search_term, count):
+	# Fetch environment
+	global VERSION_STRING
+	VERSION_STRING = 'no version string found'
+	if os.path.exists('RUNNING_VERSION'):
+		with open('RUNNING_VERSION', 'r') as f:
+			VERSION_STRING = f.readline().strip()
 
+	debug(u"Search term: {0}, with count of {1}".format(search_term, count).encode('utf8'))
+
+	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
+	template_dict = {}
+	template_dict['searchterm'] = search_term
+	template_dict['hits'] = []
+	template_dict['hit_limit'] = 0
+	template_dict['valid_search_query'] = True
+	template_dict['doc_types_present'] = set()
+	template_dict['count'] = count
+
+	template_dict['version_string']   = VERSION_STRING
+	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
+
+	# ES is case insensitive, but our query mangling below isn't.  Lets just lowercase it all now before searching
+	search_term = template_dict['searchterm'].lower()
+
+	first_word = search_term.split(':')[0]
+	# Some people use synonyms for the doctypes
+	aliases = {
+		'domains': 'domain',
+		'customers': 'customer',
+		'wiki': 'map',
+		'server': 'provsys',
+	}
+	if first_word in aliases:
+		search_term = search_term.replace(first_word, aliases[first_word])
+
+	# If the query is prefixed with doctype:, then only return results of _type:doctype
+	# eg: customer: Anchor
+	if first_word in KNOWN_DOC_TYPES:
+		search_term = '_type:' + search_term.replace(':', ' ', 1)
+
+	# Pre-query validity check
+	template_dict['valid_search_query'] = valid_search_query(search_term)
+	if not template_dict['valid_search_query']:
+		# Bail out early
+		return template_dict
+
+	# Search nao
+	results = search_index(search_term, max_hits=template_dict['count'])
+	result_docs = results['hits']
+	template_dict['hit_limit'] = results['hit_limit']
+
+	# Clean out cruft, because our index is dirty right now
+	result_docs = [ x for x in result_docs if not x['id'].startswith('https://ticket.api.anchor.com.au/') ]
+	result_docs = [ x for x in result_docs if not x['id'].startswith('provsys://') ]
+
+	# Sort all results before presentation
+	result_docs.sort(key=itemgetter('score'), reverse=True)
+	for doc in result_docs:
+		# doc is a dictionary with keys:
+		#     id		str
+		#     score		number
+		#     type		str
+		#     blob		str
+		#     other_metadata	dict
+		#     highlight		dict
+
+		# Don't display deleted RT tickets, bail out early.
+		if doc['type'] == 'rt' and doc['other_metadata'].get('status') == 'deleted':
+			continue
+
+		# Elasticsearch pre-escapes HTML for us, before applying its highlight tags.
+		# We then pass this extract to the renderer, directing it not to escape HTML.
+		hit = {}
+		hit['id'] = doc['id']
+		hit['score'] = "{0:.2f}".format(doc['score'])
+
+		# ES always returns a highlight dict now, though it may be empty.
+		# Test for presence of blob and excerpt, and use them.
+		#
+		# I've mixed feelings on how to present the highlight fragments. Google
+		# appears to present just one. We always get a list of highlights (up to 5),
+		# and could provide a couple of fragments like so:
+		#
+		#     extract = '&hellip;<br/>'.join(highlights)
+		#
+		# But, it's difficult to identify the breaks visually so I'm sticking
+		# with 1st-fragment for now.
+		if doc['highlight'].get('excerpt'): # None (False) if not present, or empty list (False), or populated list (True)
+			hit['extract'] = doc['highlight'].get('excerpt')[0]
+		elif doc['highlight'].get('blob'): # None (False) if not present, or empty list (False), or populated list (True)
+			hit['extract'] = doc['highlight'].get('blob')[0]
+		else:
+			hit['extract'] = cgi.escape(doc['blob'][:200])
+
+		if 'last_updated' in doc['other_metadata']:
+			pretty_last_updated = parse(doc['other_metadata']['last_updated']).astimezone(tzlocal()).strftime('%Y-%m-%d %H:%M')
+			doc['other_metadata']['last_updated_sydney'] = pretty_last_updated
+
+		hit['highlight_class'] = highlight_document_source(doc['id'])[1]
+		if hit['highlight_class']:
+			template_dict['doc_types_present'].add(highlight_document_source(doc['id']))
+
+		# Any other keys that the backend might provide
+		hit['other_metadata'] = doc['other_metadata']
+		# Filter out any metadata keys with a value of None
+		# (we've seen this on RT tickets' "Category" field).
+		hit['other_metadata'] = dict((k,v) for k,v in hit['other_metadata'].iteritems() if v is not None)
+
+		# More About Escaping, we have:
+		#
+		# highlight_class: CSS identifier(?), used as an HTML attribute, please keep this sane and not requiring escaping; let renderer escape it
+		# id:              A URL, used as HTML and as an attribute; let renderer escape it
+		# score:           Numeric string
+		# type:            Simple text string
+		# extract:         Arbitrary text, used as HTML; we escape it
+		# other_metadata:  Arbitrary text, let the renderer escape it
+
+		template_dict['hits'].append(hit)
+
+	return template_dict
 
 @route('/umad-opensearch.xml')
 def serve_opensearch_definition():
@@ -100,59 +220,10 @@ def heartbeat():
 	search_term = '*'
 	count = MAX_HITS
 
-	VERSION_STRING = 'no version string found'
-	if os.path.exists('RUNNING_VERSION'):
-		with open('RUNNING_VERSION', 'r') as f:
-			VERSION_STRING = f.readline().strip()
-
-	template_dict = {}
-	template_dict['searchterm'] = search_term
-	template_dict['hits'] = []
-	template_dict['hit_limit'] = 0
-	template_dict['valid_search_query'] = True
-	template_dict['doc_types_present'] = set()
-	template_dict['version_string'] = VERSION_STRING
-	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
-
-	results = search_index(search_term, max_hits=count)
-	result_docs = results['hits']
-	template_dict['hit_limit'] = results['hit_limit']
-
-	# Clean cruft
-	result_docs = [ x for x in result_docs if not x['id'].startswith('https://ticket.api.anchor.com.au/') ]
-	result_docs = [ x for x in result_docs if not x['id'].startswith('provsys://') ]
-
-	# Sort
-	result_docs.sort(key=itemgetter('score'), reverse=True)
-	for doc in result_docs:
-		if doc['type'] == 'rt' and doc['other_metadata'].get('status') == 'deleted': continue
-
-		hit = {}
-		hit['id'] = doc['id']
-		hit['score'] = "{0:.2f}".format(doc['score'])
-
-		if doc['highlight'].get('excerpt'):
-			hit['extract'] = doc['highlight'].get('excerpt')[0]
-		elif doc['highlight'].get('blob'):
-			hit['extract'] = doc['highlight'].get('blob')[0]
-		else:
-			hit['extract'] = cgi.escape(doc['blob'][:200])
-
-		if 'last_updated' in doc['other_metadata']:
-			pretty_last_updated = parse(doc['other_metadata']['last_updated']).astimezone(tzlocal()).strftime('%Y-%m-%d %H:%M')
-			doc['other_metadata']['last_updated_sydney'] = pretty_last_updated
-
-		hit['highlight_class'] = highlight_document_source(doc['id'])[1]
-		if hit['highlight_class']:
-			template_dict['doc_types_present'].add(highlight_document_source(doc['id']))
-
-		hit['other_metadata'] = doc['other_metadata']
-		hit['other_metadata'] = dict((k,v) for k,v in hit['other_metadata'].iteritems() if v is not None)
-
-		template_dict['hits'].append(hit)
+	results = search(search_term, count)
 
 	try:
-		rendered_html = template('mainpage', template_dict).encode('utf8')
+		rendered_html = template('mainpage', results).encode('utf8')
 	except Exception as e:
 		rendered_html = ''
 		import traceback
@@ -188,11 +259,11 @@ def heartbeat():
 	else:                         output.append( "✔ Reporting {} results, that's at least one for each doctype ({})".format(num_results, min_results) )
 
 	# Check if we got the expected number of results shown on the page
-	# XXX: Does this work for domains?
 	counted_hits = rendered_html.count('div class="hitlink"')
 	if counted_hits != num_results: output.append( "✘ Reported {} results but only counted {} result cards".format(num_results, counted_hits) )
 	else:                           output.append( "✔ Reported result count of {} appears to be correct".format(num_results) )
 
+	debug("Heartbeat output:\n{0}".format('\n'.join(output)))
 	if all( [ x.startswith("✔") for x in output ] ):
 		return "OK"
 
@@ -201,10 +272,9 @@ def heartbeat():
 	return "WOW SUCH FAIL VERY SAD: {}".format( ''.join(first_failure) ).replace('OK','**')
 
 
-
 @route('/')
 @view('mainpage')
-def search():
+def mainpage():
 	# Fetch environment
 	global VERSION_STRING
 	VERSION_STRING = 'no version string found'
@@ -212,116 +282,14 @@ def search():
 		with open('RUNNING_VERSION', 'r') as f:
 			VERSION_STRING = f.readline().strip()
 
-	q     = request.query.q     or ''
+	search_term     = request.query.q     or ''
 	count = request.query.count or MAX_HITS
-	# Some people are weird, yo
-	try: count = int(count)
-	except: count = MAX_HITS
+	try: 
+		count = int(count)
+	except: 
+		count = MAX_HITS
 
-	debug(u"Search term: {0}, with count of {1}".format(q, count).encode('utf8'))
-
-	# Fill up a dictionary to pass to the templating engine. It expects the searchterm and a list of document-hits
-	template_dict = {}
-	template_dict['searchterm'] = q
-	template_dict['hits'] = []
-	template_dict['hit_limit'] = 0
-	template_dict['valid_search_query'] = True
-	template_dict['doc_types_present'] = set()
-
-	template_dict['version_string']   = VERSION_STRING
-	template_dict['umad_indexer_url'] = UMAD_INDEXER_URL
-
-
-	if q:
-		# ES is case insensitive, but our query mangling below isn't.  Lets just lowercase it all now before searching
-		search_term = q.lower()
-
-		# If the query is prefixed with doctype:, then only return results of _type:doctype
-		# eg: customer: Anchor
-		if search_term.split(':')[0] in KNOWN_DOC_TYPES:
-			search_term = '_type:' + search_term.replace(':', ' ', 1)
-
-		# Pre-query validity check
-		template_dict['valid_search_query'] = valid_search_query(search_term)
-		if not template_dict['valid_search_query']:
-			# Bail out early
-			return template_dict
-
-		# Search nao
-		results = search_index(search_term, max_hits=count)
-		result_docs = results['hits']
-		template_dict['hit_limit'] = results['hit_limit']
-
-		# Clean out cruft, because our index is dirty right now
-		result_docs = [ x for x in result_docs if not x['id'].startswith('https://ticket.api.anchor.com.au/') ]
-		result_docs = [ x for x in result_docs if not x['id'].startswith('provsys://') ]
-
-		# Sort all results before presentation
-		result_docs.sort(key=itemgetter('score'), reverse=True)
-		for doc in result_docs:
-			# doc is a dictionary with keys:
-			#     id		str
-			#     score		number
-			#     type		str
-			#     blob		str
-			#     other_metadata	dict
-			#     highlight		dict
-
-			# Don't display deleted RT tickets, bail out early.
-			if doc['type'] == 'rt' and doc['other_metadata'].get('status') == 'deleted':
-				continue
-
-			# Elasticsearch pre-escapes HTML for us, before applying its highlight tags.
-			# We then pass this extract to the renderer, directing it not to escape HTML.
-			hit = {}
-			hit['id'] = doc['id']
-			hit['score'] = "{0:.2f}".format(doc['score'])
-
-			# ES always returns a highlight dict now, though it may be empty.
-			# Test for presence of blob and excerpt, and use them.
-			#
-			# I've mixed feelings on how to present the highlight fragments. Google
-			# appears to present just one. We always get a list of highlights (up to 5),
-			# and could provide a couple of fragments like so:
-			#
-			#     extract = '&hellip;<br/>'.join(highlights)
-			#
-			# But, it's difficult to identify the breaks visually so I'm sticking
-			# with 1st-fragment for now.
-			if doc['highlight'].get('excerpt'): # None (False) if not present, or empty list (False), or populated list (True)
-				hit['extract'] = doc['highlight'].get('excerpt')[0]
-			elif doc['highlight'].get('blob'): # None (False) if not present, or empty list (False), or populated list (True)
-				hit['extract'] = doc['highlight'].get('blob')[0]
-			else:
-				hit['extract'] = cgi.escape(doc['blob'][:200])
-
-			if 'last_updated' in doc['other_metadata']:
-				pretty_last_updated = parse(doc['other_metadata']['last_updated']).astimezone(tzlocal()).strftime('%Y-%m-%d %H:%M')
-				doc['other_metadata']['last_updated_sydney'] = pretty_last_updated
-
-			hit['highlight_class'] = highlight_document_source(doc['id'])[1]
-			if hit['highlight_class']:
-				template_dict['doc_types_present'].add(highlight_document_source(doc['id']))
-
-			# Any other keys that the backend might provide
-			hit['other_metadata'] = doc['other_metadata']
-			# Filter out any metadata keys with a value of None
-			# (we've seen this on RT tickets' "Category" field).
-			hit['other_metadata'] = dict((k,v) for k,v in hit['other_metadata'].iteritems() if v is not None)
-
-			# More About Escaping, we have:
-			#
-			# highlight_class: CSS identifier(?), used as an HTML attribute, please keep this sane and not requiring escaping; let renderer escape it
-			# id:              A URL, used as HTML and as an attribute; let renderer escape it
-			# score:           Numeric string
-			# type:            Simple text string
-			# extract:         Arbitrary text, used as HTML; we escape it
-			# other_metadata:  Arbitrary text, let the renderer escape it
-
-			template_dict['hits'].append(hit)
-
-	return template_dict
-
+	return search(search_term, count)
 
 # For encapsulating in a WSGI container
 application = default_app()
