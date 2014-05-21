@@ -270,9 +270,9 @@ def heartbeat():
 def mainpage():
 	search_term = request.query.q or ''
 	count = request.query.count or MAX_HITS
-	try: 
+	try:
 		count = int(count)
-	except: 
+	except:
 		count = MAX_HITS
 
 	return search(search_term, count)
