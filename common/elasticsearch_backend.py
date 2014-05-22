@@ -1,3 +1,4 @@
+import os
 import datetime
 from dateutil.tz import *
 
@@ -24,10 +25,8 @@ distillers = [ x[1] for x in inspect.getmembers(distil, inspect.isclass) ]
 
 KNOWN_DOC_TYPES = { d.doc_type for d in distillers }
 
-
 # A list of hostnames/IPs and ports, passed straight to the ES constructor.
-ELASTICSEARCH_NODES = [ "umad1.syd1.anchor.net.au:9200", "umad2.syd1.anchor.net.au:9200", "umad3.syd1.anchor.net.au:9200" ]
-
+ELASTICSEARCH_NODES = os.environ.get('ELASTICSEARCH_NODES', "trick60.syd1.anchor.net.au:9200").split(',')
 
 
 def get_distiller(url):
