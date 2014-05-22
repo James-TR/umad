@@ -44,8 +44,8 @@ def main(argv=None):
 
 	redis_server_host    = os.environ.get('UMAD_REDIS_HOST', 'localhost')
 	redis_server_port    = os.environ.get('UMAD_REDIS_PORT', 6379)
-	redis_server_db_src  = os.environ.get('UMAD_REDIS_DB', 8)
-	redis_server_db_dst  = os.environ.get('UMAD_REDIS_DB', 0)
+	redis_server_db_src  = os.environ.get('UMAD_REDIS_DB_SRC', 8)
+	redis_server_db_dst  = os.environ.get('UMAD_REDIS_DB_DST', 0)
 	redis_server_src_key = os.environ.get('UMAD_REDIS_AWESANT_KEY', 'umad_event:queue')
 	src_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=redis_server_db_src)
 	dst_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=redis_server_db_dst)
