@@ -140,7 +140,7 @@ def search(search_term, count):
 		else:
 			hit['extract'] = cgi.escape(doc['blob'][:200])
 
-		if 'last_updated' in doc['other_metadata']:
+		if 'last_updated' in doc['other_metadata'] and doc['other_metadata']['last_updated'] is not None:
 			pretty_last_updated = parse(doc['other_metadata']['last_updated']).astimezone(tzlocal()).strftime('%Y-%m-%d %H:%M')
 			doc['other_metadata']['last_updated_sydney'] = pretty_last_updated
 
