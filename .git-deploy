@@ -6,5 +6,8 @@
 
 [environment "staging"]
 	versioning = ANCHOR-STANDARD-STAGING
+	user = umad
+	host = trick60.syd1.anchor.net.au
+	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && . /home/umad/virtualenvs/umad/bin/activate && pip install -r requirements.txt && sudo /usr/local/bin/allah restart umad && echo $(grep -l $(cat .git/HEAD) .git/refs/tags/* | cut -d'/' -f4) > web_frontend/RUNNING_VERSION
 
 # vim: syntax=gitconfig
