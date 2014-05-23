@@ -15,7 +15,6 @@ from dateutil.tz import *
 from elasticsearch_backend import *
 
 
-VERSION_STRING = 'no version string found'
 DEBUG = False
 def debug(msg, force_debug=False):
 	if DEBUG or force_debug:
@@ -54,6 +53,11 @@ def highlight_document_source(url):
 
 def search(search_term, count):
 	debug(u"Search term: {0}, with count of {1}".format(search_term, count).encode('utf8'))
+
+	VERSION_STRING = 'no version string found'
+	if os.path.exists('RUNNING_VERSION'):
+		with open('RUNNING_VERSION', 'r') as f:
+			VERSION_STRING = f.readline().strip()
 
 	# Fill up a dictionary to pass to the templating engine. It expects the search_term and a list of document-hits
 	template_dict = {}
@@ -294,12 +298,6 @@ def main(argv=None):
 
 	global DEBUG
 	DEBUG = options.debug
-
-	global VERSION_STRING
-	if os.path.exists('RUNNING_VERSION'):
-		with open('RUNNING_VERSION', 'r') as f:
-			VERSION_STRING = f.readline().strip()
-	debug("Using version string {0}".format(VERSION_STRING))
 
 	run(host=options.bind_host, port=options.bind_port, debug=True)
 
