@@ -2,12 +2,12 @@
 	versioning = ANCHOR-STANDARD-PRODUCTION
 	user = umad
 	host = umad1.syd1.anchor.net.au,umad2.syd1.anchor.net.au,umad3.syd1.anchor.net.au
-	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && . /home/umad/virtualenvs/umad/bin/activate && pip install -r requirements.txt && sudo /usr/local/bin/allah restart umad && echo $(grep $(cat .git/HEAD) .git/FETCH_HEAD | cut -d'\\'' -f2) > web_frontend/RUNNING_VERSION
+	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && . /home/umad/virtualenvs/umad/bin/activate && pip install -r requirements.txt && sudo /usr/local/bin/allah restart umad && echo $(grep $(cat .git/HEAD) .git/FETCH_HEAD | cut -f2 -d"$(echo -en "\\x27")") > web_frontend/RUNNING_VERSION
 
 [environment "staging"]
 	versioning = ANCHOR-STANDARD-STAGING
 	user = umad
 	host = trick60.syd1.anchor.net.au
-	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && . /home/umad/virtualenvs/umad/bin/activate && pip install -r requirements.txt && sudo /usr/local/bin/allah restart umad && echo $(grep $(cat .git/HEAD) .git/FETCH_HEAD | cut -d'\\'' -f2) > web_frontend/RUNNING_VERSION
+	command = cd /home/umad/app/ && git fetch --tags && git checkout %s && . /home/umad/virtualenvs/umad/bin/activate && pip install -r requirements.txt && sudo /usr/local/bin/allah restart umad && echo $(grep $(cat .git/HEAD) .git/FETCH_HEAD | cut -f2 -d"$(echo -en "\\x27")") > web_frontend/RUNNING_VERSION
 
 # vim: syntax=gitconfig
