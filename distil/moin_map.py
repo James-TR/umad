@@ -33,16 +33,14 @@ class MoinMapDistiller(Distiller):
 		except:
 			raise RuntimeError("You must provide Map wiki credentials, please set MAPWIKI_USER and MAPWIKI_PASS")
 
-		# Grab the printable version of the page
-		response = requests.get(url, auth=wiki_credentials, params={'action':'print'}, verify='AnchorCA.pem')
-		try:
-			response.raise_for_status()
-		except:
-			#debug("Error getting page from map wiki, got HTTP response {0}".format(response.status_code))
-			# Deleted pages have a status of 404
-			if response.status_code == 404:
-				self.enqueue_deletion()
+		# The non-printable version of the page shows valid status codes on redirect, rather than a 200
+		response = requests.head(url, auth=wiki_credentials, verify='AnchorCA.pem', allow_redirects=False)
+		if response.status_code in (404, 301):
+			self.enqueue_deletion()
 			return
+
+		# Once we know the page is valid, grab the printable version of the page
+		response = requests.get(url, auth=wiki_credentials, params={'action':'print'}, verify='AnchorCA.pem')
 
 		# An example URL:  https://map.engineroom.anchor.net.au/PoP/SYD1/NetworkPorts
 		#
