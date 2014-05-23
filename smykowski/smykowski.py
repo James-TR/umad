@@ -46,8 +46,8 @@ def main(argv=None):
 	redis_server_db_src  = os.environ.get('UMAD_REDIS_DB_SRC', 8)
 	redis_server_db_dst  = os.environ.get('UMAD_REDIS_DB_DST', 0)
 	redis_server_src_key = os.environ.get('UMAD_REDIS_AWESANT_KEY', 'umad_event:queue')
-	src_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=redis_server_db_src)
-	dst_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=redis_server_db_dst)
+	src_redis = redis.StrictRedis(host=redis_server_host, port=int(redis_server_port), db=redis_server_db_src)
+	dst_redis = redis.StrictRedis(host=redis_server_host, port=int(redis_server_port), db=redis_server_db_dst)
 
 	# Get URLs out of Redis, look for interesting ones, put them into the
 	# indexing listener's queue. Make this very stupid, daemontools will
@@ -73,7 +73,7 @@ def main(argv=None):
 			continue
 
 		# Throw it in the queue
-		if request_method in ('POST', 'GET'):
+		if request_method in ('POST', 'PUT'):
 			enqueue(dst_redis, 'umad_indexing_queue', request_url)
 
 		if request_method in ('DELETE',):
