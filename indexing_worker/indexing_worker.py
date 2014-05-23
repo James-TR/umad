@@ -74,7 +74,7 @@ def main(argv=None):
 
 	redis_server_host = os.environ.get('UMAD_REDIS_HOST', 'localhost')
 	redis_server_port = os.environ.get('UMAD_REDIS_PORT', 6379)
-	teh_redis = redis.StrictRedis(host=redis_server_host, port=redis_server_port, db=0)
+	teh_redis = redis.StrictRedis(host=redis_server_host, port=int(redis_server_port), db=0)
 
 	while True:
 		try:
