@@ -52,7 +52,7 @@ def index(url):
 		if type(trimmed_blob) is str:
 			debug("400 chars of blob: {0}".format(trimmed_blob))
 		else: # unicode
-			debug(u"400 chars of blob: {0}".format(trimmed_blob))
+			debug(u"400 chars of blob: {0}".format(trimmed_blob).encode('utf8'))
 		add_to_index(doc)
 		mention("Successfully added to index: %(url)s" % doc)
 		debug("")
