@@ -80,6 +80,7 @@ def search(search_term, count):
 	}
 	if first_word in aliases:
 		search_term = search_term.replace(first_word, aliases[first_word])
+		first_word = aliases[first_word]
 
 	# If the query is prefixed with doctype:, then only return results of _type:doctype
 	# eg: customer: Anchor
