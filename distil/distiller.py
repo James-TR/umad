@@ -6,9 +6,7 @@ from dateutil.tz import *
 class Distiller(object):
 	def __init__(self, url):
 		self.url         = url
-		self.indexer_url = os.environ.get('UMAD_INDEXER_URL', None)
-		if self.indexer_url is None:
-			self.indexer_url='https://umad-indexer-stg.anchor.net.au/'
+		self.indexer_url = os.environ.get('UMAD_INDEXER_URL', 'https://umad-indexer-stg.anchor.net.au/')
 
 		self.auth = {}
 		if os.environ.get('MAPWIKI_USER') and os.environ.get('MAPWIKI_PASS'):
