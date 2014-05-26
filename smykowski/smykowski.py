@@ -79,6 +79,35 @@ def main(argv=None):
 		if request_method in ('DELETE',):
 			enqueue(dst_redis, 'umad_deletion_queue', request_url)
 
+		# Make a note that we saw a heartbeat. We'd like to keep all
+		# the hits we've seen in the last N minutes (eg. 5min), but
+		# Redis doesn't export expiry of list elements, only the whole
+		# key. Instead we use a sorted set to associate a timestamp
+		# with each heartbeat ping, making it easy for us to grab only
+		# recent pings for inspection, and delete old ones once their
+		# usefulness has passed.
+		if request_method == 'PING':
+			pass
+
+			# This is made somewhat harder because we want to keep
+			# a numeric range of timestamps, not a quantity of
+			# them. Sorted sets look like the only way to do it.
+
+			# By way of example, assume that each backend pings
+			# every 5min, and we'd like to keep the last 30min
+			# worth of ping timestamps. We *could* keep a list of
+			# ping timestamps and truncate to len=100 all the time,
+			# but that doesn't assure a sane distribution of
+			# timestamps and tell us what we *really* want to know.
+
+			# Because sets are unique, I think I'll need to use
+			# dummy key names, and keep the timestamps purely as
+			# scores.
+
+			# poke redis
+			# ZADD             heartbeat_${doctype} time.time() time.time()
+			# ZREMRANGEBYSCORE heartbeat_${doctype} -inf        time.30minutesAgo()
+
 	return 0
 
 
