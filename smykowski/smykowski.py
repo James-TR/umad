@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import datetime
 
 import redis
 import json
@@ -87,8 +88,6 @@ def main(argv=None):
 		# recent pings for inspection, and delete old ones once their
 		# usefulness has passed.
 		if request_method == 'PING':
-			pass
-
 			# This is made somewhat harder because we want to keep
 			# a numeric range of timestamps, not a quantity of
 			# them. Sorted sets look like the only way to do it.
@@ -104,9 +103,31 @@ def main(argv=None):
 			# dummy key names, and keep the timestamps purely as
 			# scores.
 
-			# poke redis
-			# ZADD             heartbeat_${doctype} time.time() time.time()
-			# ZREMRANGEBYSCORE heartbeat_${doctype} -inf        time.30minutesAgo()
+			# I'd like to do a proper conversion of URL-to-doctype,
+			# but that would introduct a dependency on the
+			# distillers. It'd be fine, but I think I'd rather
+			# avoid it right now, so we'll leave it to be someone
+			# else's problem when it's read back for monitoring.
+
+			# Assume that the PING'd urls for each backend don't
+			# change over time, we can still do pattern
+			# recognition.
+
+			current_time       = datetime.datetime.utcnow()
+			thirty_minutes     = datetime.timedelta(minutes=30)
+			thirty_minutes_ago = current_time - thirty_minutes
+
+			current_timestamp            = int(time.mktime(current_time.timetuple()))
+			thirty_minutes_ago_timestamp = int(time.mktime(thirty_minutes_ago.timetuple()))
+
+			dst_redis.zremrangebyscore('umad_backend_heartbeats', '-inf', thirty_minutes_ago_timestamp)
+			dst_redis.zadd('umad_backend_heartbeats', current_timestamp, "{0} {1}".format(request_url, current_timestamp) )
+
+			# On readback we simply do:
+			# dst_redis.zrangebyscore('umad_backend_heartbeats', thirty_minutes_ago_timestamp, '+inf')
+			# Split each result, keep the ones for which the first
+			# element is the backend we care about, then analyse
+			# the numbers.
 
 	return 0
 
