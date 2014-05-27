@@ -122,6 +122,7 @@ def main(argv=None):
 
 			dst_redis.zremrangebyscore('umad_backend_heartbeats', '-inf', thirty_minutes_ago_timestamp)
 			dst_redis.zadd('umad_backend_heartbeats', current_timestamp, "{0} {1}".format(request_url, current_timestamp) )
+			mention(u"Logged heartbeat ping for {0} at {1}".format(request_url, current_timestamp))
 
 			# On readback we simply do:
 			# dst_redis.zrangebyscore('umad_backend_heartbeats', thirty_minutes_ago_timestamp, '+inf')
