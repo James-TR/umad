@@ -58,7 +58,7 @@ def main(argv=None):
 		log_entry_dict = json.loads(log_entry_json)
 		log_message    = log_entry_dict[u'@message']
 
-		(request_method, request_url) = log_message.split()
+		(request_method, request_url) = log_message.split(None, 1)
 
 		#debug("Got a request with method {0} and URL of {1}".format(request_method, request_url))
 
