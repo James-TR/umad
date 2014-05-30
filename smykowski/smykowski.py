@@ -74,11 +74,22 @@ def main(argv=None):
 			continue
 
 		# Throw it in the queue
-		if request_method in ('POST', 'PUT'):
-			enqueue(dst_redis, 'umad_indexing_queue', request_url)
+		if request_url.startswith('https://docs.anchor.net.au/'):
+			# Our gollum wikis are special (ie. annoying).  Gollum
+			# POSTs to URLs that don't really exists, so we have to
+			# derive the actual pagename ourself and call a fake
+			# POST on that. -_- To ensure we can tell the fakes
+			# from the real ones, we use INDEX as the method
+			# instesd.
+			if request_method in ('INDEX',):
+				enqueue(dst_redis, 'umad_indexing_queue', request_url)
 
-		if request_method in ('DELETE',):
-			enqueue(dst_redis, 'umad_deletion_queue', request_url)
+		else:
+			if request_method in ('POST', 'PUT'):
+				enqueue(dst_redis, 'umad_indexing_queue', request_url)
+
+			if request_method in ('DELETE',):
+				enqueue(dst_redis, 'umad_deletion_queue', request_url)
 
 		# Make a note that we saw a heartbeat. We'd like to keep all
 		# the hits we've seen in the last N minutes (eg. 5min), but
