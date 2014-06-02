@@ -31,7 +31,8 @@ class MoinMapDistiller(Distiller):
 
 		# The non-printable version of the page shows valid status codes on redirect, rather than a 200
 		response = requests.head(url, auth=wiki_credentials, verify='AnchorCA.pem', allow_redirects=False)
-		if response.status_code in (404, 301):
+		# Don't index redirects, pages not found, or pages we aren't authorised to view
+		if response.status_code in (301, 403, 404):
 			self.enqueue_deletion()
 			return
 
