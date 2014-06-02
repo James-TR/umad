@@ -64,7 +64,7 @@
 						<a href="{{ customer_tickets_link }}"><span class="glyphicon glyphicon-list"></span> Show customer's tickets</a>
 					</span>
 				% elif doc_type == 'domain':
-					<span class="excerpt"> Expiry: {{ other_metadata['expiry'] }}\\
+					<span class="excerpt"> Expiry: {{ other_metadata['expiry'].split('T')[0] }}\\
 						<% output = ''
 						if 'customer_name' in other_metadata:
 							output += '\n' + "Customer: {customer_name} ({customer_id})".format(**other_metadata)
