@@ -140,8 +140,6 @@ def search(search_term, count):
 		# with 1st-fragment for now.
 		if doc['highlight'].get('excerpt'): # None (False) if not present, or empty list (False), or populated list (True)
 			hit['extract'] = doc['highlight'].get('excerpt')[0]
-		elif doc['highlight'].get('blob'): # None (False) if not present, or empty list (False), or populated list (True)
-			hit['extract'] = doc['highlight'].get('blob')[0]
 		# There was no highlighted matches, so show the excerpt if we have it
 		elif 'excerpt' in doc['other_metadata']:
 			hit['extract'] = cgi.escape(doc['other_metadata']['excerpt'][:200])
