@@ -70,6 +70,7 @@ def main(argv=None):
 				request_url.endswith('.css'),
 				request_url.endswith( ('.jpg','.png','.gif') ),
 				request_url.endswith( ('.woff','.ttf','.otf') ),
+				request_url.endswith( ('/create-a-new-page','/new-page') ),
 			]):
 			continue
 
