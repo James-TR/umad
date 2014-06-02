@@ -7,10 +7,6 @@ WIKIWORD_RE = re.compile(r'([a-z]+)([A-Z])')
 from distiller import Distiller
 
 class MoinMapDistiller(Distiller):
-	""" XXX: Might be more sensible to treat Map pages like Gollum pages, and just
-	         let the HTML-to-Markdown processor have at it.
-	"""
-
 	doc_type = 'map'
 
 	@classmethod
