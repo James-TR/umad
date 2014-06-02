@@ -58,7 +58,6 @@ class GollumDistiller(Distiller):
 			content = content.replace(JUNK, '')
 
 		# XXX: We're assuming here that all pages across all wikis are in a single index and namespace
-		# XXX: What if the page is empty? Might break a whole bunch of assumptions below this point.
 
 		# Get the page name
 		page_name = url.replace('https://docs.anchor.net.au/', '')
