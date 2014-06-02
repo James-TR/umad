@@ -142,6 +142,10 @@ def search(search_term, count):
 			hit['extract'] = doc['highlight'].get('excerpt')[0]
 		elif doc['highlight'].get('blob'): # None (False) if not present, or empty list (False), or populated list (True)
 			hit['extract'] = doc['highlight'].get('blob')[0]
+		# There was no highlighted matches, so show the excerpt if we have it
+		elif 'excerpt' in doc['other_metadata']:
+			hit['extract'] = cgi.escape(doc['other_metadata']['excerpt'][:200])
+		# And if that doesn't exist either, show the blob
 		else:
 			hit['extract'] = cgi.escape(doc['blob'][:200])
 
