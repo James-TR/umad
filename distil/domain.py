@@ -5,6 +5,7 @@ import datetime
 
 
 from distiller import Distiller
+from distil.opensrs import OpenSRSHTTPException
 
 class DomainDistiller(Distiller):
 	doc_type = 'domain'
@@ -60,7 +61,11 @@ class DomainDistiller(Distiller):
 	def blobify(self):
 		url = self.url
 		name = url.split('/')[-1]
-		domain = self.get_info(name)
+		try:
+			domain = self.get_info(name)
+		except OpenSRSHTTPException as e:
+			self.enqueue_deletion()
+			return
 
 		# Put together our response. We have:
 		# - name                  <str>

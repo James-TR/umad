@@ -271,8 +271,6 @@ class OpenSRS(object):
 			# convert
 			data = xml_to_data(data_block)
 			if data['is_success'] != '1':
-				print ("Response text:\n{}").format(data)
-				print("Parameters:\n{}").format(params)
 				raise OpenSRSHTTPException("Status returned from POST was not 200")
 
 			return data
