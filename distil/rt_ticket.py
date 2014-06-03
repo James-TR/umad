@@ -233,7 +233,10 @@ class RtTicketDistiller(Distiller):
 		# Some messages are empty or otherwise useless, so ignore them
 		messages = [ m for m in messages if m['subject'] or m['content'] or m['from_email'] ]
 
-		# XXX: Incurs an explosion if we get a ticket with no messages lol
+		# XXX: A ticket with no useful message?  Something's wrong - quick, let's die!
+		if len(messages) == 0:
+			raise RuntimeError("{} had no useful messages in ticket API".format(self.ticket_url) )
+
 		first_post = messages[0].copy()
 		# For some reason, the subject line sometimes appears to be empty. Not
 		# sure if this is a problem with the ticket API.
