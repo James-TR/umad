@@ -243,10 +243,6 @@ class RtTicketDistiller(Distiller):
 			if message['content']!= '':
 				first_post = message
 				break
-		# For some reason, the subject line sometimes appears to be empty. Not
-		# sure if this is a problem with the ticket API.
-		if not first_post['subject']:
-			first_post['subject'] = ticket_subject
 		first_post['content'] = '\n'.join( first_post['content'].split('\n')[:6] )
 		ticket_excerpt = first_post['content'].encode('utf8')
 
@@ -257,10 +253,6 @@ class RtTicketDistiller(Distiller):
 			# XXX: We have found non-private tickets without any customer-visible messages, like rt://8785
 			if public_messages:
 				public_first_post = public_messages[0]
-				# For some reason, the subject line sometimes appears to be empty. Not
-				# sure if this is a problem with the ticket API.
-				if not public_first_post['subject']:
-					public_first_post['subject'] = ticket_subject
 				public_ticket_excerpt = public_first_post['content'].encode('utf8')
 			else:
 				public_ticket_excerpt = "No excerpt could be found for this ticket, please contact Anchor Support for assistance"
