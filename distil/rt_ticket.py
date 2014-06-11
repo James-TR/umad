@@ -237,7 +237,12 @@ class RtTicketDistiller(Distiller):
 		if len(messages) == 0:
 			raise RuntimeError("{} had no useful messages in ticket API".format(self.ticket_url) )
 
-		first_post = messages[0].copy()
+		# Get the first clean message
+		first_post = {}
+		for message in messages:
+			if message['content']!= '':
+				first_post = message
+				break
 		# For some reason, the subject line sometimes appears to be empty. Not
 		# sure if this is a problem with the ticket API.
 		if not first_post['subject']:
