@@ -45,7 +45,7 @@ class RtTicketDistiller(Distiller):
 		body_lines = clean_msg['content'].split('\n')
 		body_lines = [ line.strip() for line in body_lines ]                     # Remove leading and trailing whitespace for later compaction
 		body_lines = [ line for line in body_lines if not line.startswith('>') ] # Quoted lines
-		body_lines = [ line for line in body_lines if not line == '' ]           # Empty lines
+		body_lines = [ line for line in body_lines if line not in ('', '.') ]    # Empty lines or lines with a single dot (usually from creation of internal tickets)
 		body_lines = [ line for line in body_lines if line not in ('Hi,', 'Hello,') or len(line) > 20 ] # Greetings
 
 		# Remove Anchor boilerplate when customers reply to the message when they first file a ticket
