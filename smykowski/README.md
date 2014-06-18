@@ -10,7 +10,7 @@ Log messages are blindly assumed to have the following format:
 
     MESSAGE = METHOD, white space, URL ;
 
-    METHOD = "POST" | "GET" | "DELETE" ;
+    METHOD = "POST" | "GET" | "DELETE" | "PING" ;
 
     URL is defined as per usual internet RFCs, etc.
 
