@@ -28,8 +28,12 @@ def fetch_pings():
 
 
 def human_readable(pings):
-	# Convert the second element to a humad-readable timestamp
-	return [ (x[0], datetime.datetime.fromtimestamp(x[1]).strftime('%Y-%m-%d %H:%M:%S%z') ) for x in pings ]
+	# Convert the second element to a human-readable timestamp
+	return [ (x[0].partition(' ')[0], datetime.datetime.fromtimestamp(x[1]).strftime('%Y-%m-%d %H:%M:%S%z') ) for x in pings ]
+
+def clean_first_element(pings):
+	# Strip the first element back to just the URL
+	return [ (x[0].partition(' ')[0], x[1] ) for x in pings ]
 
 
 def filter_for_backend(pings, filter_string=''):
