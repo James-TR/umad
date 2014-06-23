@@ -94,6 +94,10 @@ def main(argv=None):
 			# Gollum, which only allows for plain filenames/URLs.
 			request_url = request_url.decode('string_escape').decode('utf8')
 
+			# When the Python3 revolution arrives we'll need to do this:
+			# request_url = bytes(request_url, 'utf-8').decode('unicode_escape')
+			# http://stackoverflow.com/a/4020824
+
 			if request_method in ('POST', 'PUT'):
 				enqueue(dst_redis, 'umad_indexing_queue', request_url)
 
