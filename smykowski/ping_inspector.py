@@ -44,14 +44,13 @@ def main(argv=None):
 	from pprint import pprint
 
 	pings = fetch_pings()
+	clean_pings = clean_first_element(pings)
 
-	# Test...
-	pprint(pings)
-	pprint(human_readable(pings))
-
-	# Test test, 1-2-test... testing...
-	pprint(filter_for_backend(pings, 'docs.anchor'))
-	pprint(filter_for_backend(pings, 'map.eng'))
+	backends = set([ x[0] for x in clean_pings ])
+	grouped_pings = {}
+	for backend in backends:
+		grouped_pings[backend] = [ x[1] for x in clean_pings if x[0] == backend ]
+	pprint(grouped_pings)
 
 	return 0
 
