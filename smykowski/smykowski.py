@@ -14,11 +14,13 @@ import json
 # XXX: maybe these should be to stdout instead of stderr, I dunno
 def debug(msg, force_debug=False):
 	if DEBUG or force_debug:
-		sys.stderr.write(PID_PREFIX + str(msg) + '\n')
+		msg_output = u"{0}{1}\n".format(PID_PREFIX, msg)
+		sys.stderr.write(msg_output.encode('utf8'))
 		sys.stderr.flush()
 
 def mention(msg):
-	sys.stderr.write(PID_PREFIX + str(msg) + '\n')
+	msg_output = u"{0}{1}\n".format(PID_PREFIX, msg)
+	sys.stderr.write(msg_output.encode('utf8'))
 	sys.stderr.flush()
 
 
