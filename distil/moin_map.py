@@ -76,8 +76,10 @@ class MoinMapDistiller(Distiller):
 			# Try and find an exciting excerpt, this is complete and utter guesswork
 			excerpt = '\n'.join(page_lines[:10])
 
-		# Content is now considered tidy
-		blob = '\n'.join([title] + page_lines)
+		# Content is now considered tidy.  Massage the title to
+		# Unicode, to match the content.
+		title = title.decode('utf8')
+		blob = u'\n'.join([title] + page_lines)
 
 		# Allow for title keyword searching
 		map_rough_title_chunks  = set(page_name.split('/'))
