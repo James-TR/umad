@@ -88,6 +88,12 @@ def main(argv=None):
 				enqueue(dst_redis, 'umad_indexing_queue', request_url)
 
 		else:
+			# nginx encodes URLs with backslash hex escapes, which
+			# we need to clean up. Now it's a Unicode object. No
+			# name-mangling is needed for docs.anchor because it's
+			# Gollum, which only allows for plain filenames/URLs.
+			request_url = request_url.decode('string_escape').decode('utf8')
+
 			if request_method in ('POST', 'PUT'):
 				enqueue(dst_redis, 'umad_indexing_queue', request_url)
 
