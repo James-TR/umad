@@ -37,7 +37,7 @@ def enqueue(dst_redis, queue_name, url):
 		pipeline.execute() # will return something like:   [ {0|1}, num_dummies ]
 		mention(u"Successful insertion of {0} into {1}".format(url, queue_name))
 	except Exception as e:
-		mention("Something went boom while inserting {0}: {1}".format(url, e))
+		mention(u"Something went boom while inserting {0}: {1}".format(url, e))
 		raise
 
 
