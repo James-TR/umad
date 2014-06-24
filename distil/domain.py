@@ -133,7 +133,7 @@ class DomainDistiller(Distiller):
 				customer_name = customer['description']
 				blob += (' {0} {1} ').format(customer_name, customer_id)
 			except:
-				print ("Indexing {0}: couldn't get customer {1} from API, HTTP error {2}, probably not allowed to view customer".format(name, customer_id, customer_response.status_code))
+				print ("Indexing {0}: couldn't get customer {1} from API, HTTP error {2}, probably not allowed to view customer. Unexpected but not fatal".format(name, customer_id, customer_response.status_code))
 
 		domainblob = {
 			'name':             name,
