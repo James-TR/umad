@@ -1,7 +1,7 @@
 UMAD - Unearth Me A Document
 ============================
 
-It's like Google for all your digital shit (information), spread across multiple disjoint systems with no common data format.
+It's like Google for all your digital junk (information), spread across multiple disjoint systems with no common data format.
 
 
 Data flow
