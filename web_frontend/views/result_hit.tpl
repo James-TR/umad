@@ -24,12 +24,13 @@
 
 						customer_name = other_metadata.get('customer_name', u'')
 						if customer_name:
-							customer_name = u'↜ {0}'.format(customer_name)
+							customer_search_query_string = urlencode({'q':'customer: "{0}"'.format(customer_name.encode('utf8'))})
+							customer_name = u"""↜ <a href="/?{1}">{0}</a>""".format(customer_name, customer_search_query_string)
 						end
 
 						href = other_metadata.get('functional_url', id)
 					%>
-					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{ customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
+					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{! customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
 					<!-- OPTIONAL FOR NOW
 					<a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ id.encode('utf8') }}" data-text="{{ linktext.encode('utf8') }}" data-dnt="true">
 					<span class="glyphicon glyphicon-thumbs-up" title="SHARE with #robots" onClick="javascript:shareWithSysadmins('{{ id.encode('utf8').encode('base64').replace('\n','').strip() }}', '{{ linktext.encode('utf8').encode('base64').replace('\n','').strip() }}');">sns</span>

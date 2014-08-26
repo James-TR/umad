@@ -60,6 +60,10 @@ a {
   font-style: italic;
   color: green;
 }
+.hitlink .customer-name a {
+  font-size: inherit;
+  color: green;
+}
 .hiturl {
   font-size: smaller;
   font-style: italic;
