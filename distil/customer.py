@@ -5,6 +5,8 @@ import requests
 
 from distiller import Distiller
 
+CUSTOMER_TENANCIES_URL = 'https://customer.api.anchor.com.au/customer-tenancies'
+
 
 def blobify_contact(c):
 	# A contact-dict is:
@@ -85,6 +87,20 @@ class CustomerDistiller(Distiller):
 			yield contact
 
 
+	def get_tenancies(self, customer_id):
+		# Prepare auth
+		try: api_credentials = self.auth['anchor_api']
+		except: raise RuntimeError("You must provide Anchor API credentials, please set API_AUTH_USER and API_AUTH_PASS")
+
+		tenancies_response = requests.get(CUSTOMER_TENANCIES_URL, params={'customer_id':customer_id}, auth=api_credentials, verify=True, headers=self.accept_json)
+
+		try: tenancies_response.raise_for_status()
+		except: raise RuntimeError("Couldn't search tenancies in customer API, HTTP error {0}, probably not allowed to view customer".format(tenancies_response.status_code))
+
+		tenancies_list = tenancies_response.json()
+		return [ tenancy['tenancy_id'] for tenancy in tenancies_list ]
+
+
 	def blobify(self):
 		url = self.url
 
@@ -120,6 +136,7 @@ class CustomerDistiller(Distiller):
 		primary_contacts     = self.get_contacts(customer['primary_contact_url_list'])
 		billing_contacts     = self.get_contacts(customer['billing_contact_url_list'])
 		alternative_contacts = self.get_contacts(customer['alternative_contact_url_list'])
+		tenancies            = self.get_tenancies(customer_id)
 
 		# Handle merged customers by calling our enqueue_deletion method.
 		# supplied_customer_id is what we were given in the URL.
@@ -137,6 +154,7 @@ class CustomerDistiller(Distiller):
 		# - primary_contacts      <list> of <contact-dict>
 		# - billing_contacts      <list> of <contact-dict>
 		# - alternative_contacts  <list> of <contact-dict>
+		# - tenancies             <list> of <unicode>
 
 		blob = " ".join([
 			str(customer_id),
@@ -171,5 +189,11 @@ class CustomerDistiller(Distiller):
 			technical_contacts_blob = u"Technical contacts: {0}".format(technical_contacts_joined).encode('utf8')
 			customerblob['technical_contacts'] = technical_contacts_blob
 			customerblob['blob'] += '\n' + technical_contacts_blob
+
+		if tenancies:
+			tenancies_joined = u', '.join(tenancies)
+			tenancies_blob = "OpenStack tenancies: {0}".format(tenancies_joined).encode('utf8')
+			customerblob['tenancies'] = tenancies
+			customerblob['blob'] += '\n' + tenancies_blob
 
 		yield customerblob
