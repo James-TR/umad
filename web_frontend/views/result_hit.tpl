@@ -29,6 +29,9 @@
 						end
 
 						href = other_metadata.get('functional_url', id)
+
+						# Guarantee that the list exists for later use
+						tenancy_ids = []
 					%>
 					<a href="{{ href.encode('utf8') }}" onClick="evilUserClick({{ json.dumps(hit) }})">{{ linktext.encode('utf8') }}</a> <span class="customer-name">{{! customer_name.encode('utf8') }}</span> <span class="document-score">scored {{ score }}</span>
 					<!-- OPTIONAL FOR NOW
@@ -57,12 +60,19 @@
 						if 'technical_contacts' in other_metadata:
 							output += '\n' + other_metadata['technical_contacts']
 						end
+						if 'tenancies' in other_metadata:
+							tenancy_ids = other_metadata['tenancies']
+						end
 						new_ticket_link = 'https://rt.engineroom.anchor.net.au/Ticket/Create.html?Queue=13&Object-RT::Ticket--CustomField-92-Value={customer_id}'.format(**other_metadata)
 						customer_tickets_link = 'https://rt.engineroom.anchor.net.au/Search/Results.html?Order=DESC&OrderBy=LastUpdated&Query=%27CF.{{Related%20Customer}}%27%3D{customer_id}'.format(**other_metadata)
 						%>
 						{{ output.encode('utf8') }}
 						<a href="{{ new_ticket_link }}" target="_blank" ><span class="glyphicon glyphicon-plus"></span> Create a ticket</a>
 						<a href="{{ customer_tickets_link }}"><span class="glyphicon glyphicon-list"></span> Show customer's tickets</a>
+						% for tenancy_id in tenancy_ids:
+							% openstack_horizon_link = "https://horizon.syd.opencloud.anchor.hosting/auth/switch/{}/?next=/project/".format(tenancy_id)
+							<a href="{{ openstack_horizon_link }}" target="_blank" ><span class="glyphicon glyphicon-cloud"></span> Go to tenancy in Horizon {{ tenancy_id }}</a>
+						% end
 					</span>
 				% elif doc_type == 'domain':
 					<span class="excerpt"> Expiry: {{ other_metadata['expiry'].split('T')[0] }}\\
